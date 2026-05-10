@@ -1,0 +1,17 @@
+{
+  "name": "sg-bus-datahub",
+  "version": "1.0.0",
+  "description": "Scripts to gather data to power features inthe SG Bus app",
+  "license": "ISC",
+  "author": "nelss",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "data": "node index.js"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.17",
+    "dotenv": "^17.4.2"
+  }
+}
