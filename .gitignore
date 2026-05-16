@@ -1,3 +1,4 @@
 .env
-/Data/Raw
+/Data/Raw/bus/*
+/Data/Raw/mrt/*
 node_modules/
