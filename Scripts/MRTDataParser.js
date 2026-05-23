@@ -145,7 +145,7 @@ async function parseMRTData() {
         stations, lines
     }
 
-    fs.writeFile('./Data/Output/mrt/mrtData.json', JSON.stringify(mrtData), (err) => {
+    fs.writeFile('./Data/Output/mrt/mrt.json', JSON.stringify(mrtData), (err) => {
         if (err) {
             console.error("Error saving MRT data:", err)
         } else {
