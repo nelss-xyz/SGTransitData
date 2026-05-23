@@ -104,6 +104,21 @@ async function parseMRTData() {
             stations.push(station);
         }
 
+        // Official LTA hex colour codes for each line
+        const officialLineColors = {
+            'North South Line':              '#D42E12',
+            'East West Line':                '#009645',
+            'North East Line':               '#9900AA',
+            'Circle Line':                   '#FA9E0D',
+            'Downtown Line':                 '#005EC4',
+            'Thomson-East Coast Line':       '#9D5B25',
+            'Bukit Panjang LRT':             '#748477',
+            'Sengkang LRT (East Loop)':      '#748477',
+            'Sengkang LRT (West Loop)':      '#748477',
+            'Punggol LRT (East Loop)':       '#748477',
+            'Punggol LRT (West Loop)':       '#748477',
+        };
+
         if (feature.properties.line_color) {
             // Check if this feature is one of the LRT loops that should be merged
             const lrtMergeMap = {
@@ -137,7 +152,7 @@ async function parseMRTData() {
                     const lrtNames = { 'STL': 'Sengkang LRT', 'PTL': 'Punggol LRT' };
                     lines.push({
                         "name": lrtNames[mergedLineCode],
-                        "lineColor": feature.properties.line_color,
+                        "lineColor": officialLineColors[feature.properties.name] ?? feature.properties.line_color,
                         "code": mergedLineCode,
                         "type": "lrt",
                         "stations": relationsEntry ? relationsEntry.stations : [],
@@ -168,7 +183,7 @@ async function parseMRTData() {
 
                 lines.push({
                     "name": feature.properties.name,
-                    "lineColor": feature.properties.line_color,
+                    "lineColor": officialLineColors[feature.properties.name] ?? feature.properties.line_color,
                     "code": lineCode,
                     "type": feature.geometry.network == "singapore-lrt" ? "lrt" : "mrt",
                     "stations": stationsOnLine,
