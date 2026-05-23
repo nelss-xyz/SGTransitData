@@ -107,10 +107,12 @@ async function parseMRTData() {
         if (feature.properties.line_color) {
             let stationsOnLine = [];
             let linePolylines = [];
+            let lineCode = "";
 
             for (const line of stationLineRelationsDat) {
                 if (line.lineName.replace("-", " ") == feature.properties.name.replace("-", " ")) {
-                    stationsOnLine = line.stations
+                    stationsOnLine = line.stations;
+                    lineCode = line.lineCode;
                 }
             }
 
@@ -127,9 +129,10 @@ async function parseMRTData() {
             const line = {
                 "name": feature.properties.name,
                 "lineColor": feature.properties.line_color,
+                "code": lineCode,
                 "type": feature.geometry.network == "singapore-lrt" ? "lrt" : "mrt",
                 "stations": stationsOnLine,
-                "polyline": linePolylines
+                "polyline": linePolylines,
             }
 
             lines.push(line);

@@ -2,3 +2,4 @@
 /Data/Raw/bus/*
 /Data/Raw/mrt/*
 node_modules/
+.DS_Store
