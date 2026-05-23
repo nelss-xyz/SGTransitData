@@ -105,37 +105,76 @@ async function parseMRTData() {
         }
 
         if (feature.properties.line_color) {
-            let stationsOnLine = [];
-            let linePolylines = [];
-            let lineCode = "";
+            // Check if this feature is one of the LRT loops that should be merged
+            const lrtMergeMap = {
+                'Sengkang LRT (East Loop)': 'STL',
+                'Sengkang LRT (West Loop)': 'STL',
+                'Punggol LRT (East Loop)': 'PTL',
+                'Punggol LRT (West Loop)': 'PTL',
+            };
+            const mergedLineCode = lrtMergeMap[feature.properties.name];
 
-            for (const line of stationLineRelationsDat) {
-                if (line.lineName.replace("-", " ") == feature.properties.name.replace("-", " ")) {
-                    stationsOnLine = line.stations;
-                    lineCode = line.lineCode;
+            if (mergedLineCode) {
+                // Find or create the unified line entry
+                let existingLine = lines.find(l => l.code === mergedLineCode);
+                const newPolylines = [];
+
+                if (feature.geometry.type == "LineString") {
+                    newPolylines.push(polyline.encode(feature.geometry.coordinates.map((coords) => [coords[1], coords[0]])));
                 }
-            }
+                if (feature.geometry.type == "MultiLineString") {
+                    feature.geometry.coordinates.forEach((seg) => {
+                        newPolylines.push(polyline.encode(seg.map((coords) => [coords[1], coords[0]])));
+                    });
+                }
 
-            if (feature.geometry.type == "LineString") {
-                linePolylines.push(polyline.encode(feature.geometry.coordinates.map((coords) => [coords[1], coords[0]])))
-            }
+                if (existingLine) {
+                    // Merge polylines into the already-created unified entry
+                    existingLine.polyline.push(...newPolylines);
+                } else {
+                    // First time seeing this unified line — create the entry
+                    const relationsEntry = stationLineRelationsDat.find(l => l.lineCode === mergedLineCode);
+                    const lrtNames = { 'STL': 'Sengkang LRT', 'PTL': 'Punggol LRT' };
+                    lines.push({
+                        "name": lrtNames[mergedLineCode],
+                        "lineColor": feature.properties.line_color,
+                        "code": mergedLineCode,
+                        "type": "lrt",
+                        "stations": relationsEntry ? relationsEntry.stations : [],
+                        "polyline": newPolylines,
+                    });
+                }
+            } else {
+                // Normal (non-merged) line handling
+                let stationsOnLine = [];
+                let linePolylines = [];
+                let lineCode = "";
 
-            if (feature.geometry.type == "MultiLineString") {
-                feature.geometry.coordinates.forEach((line) => {
-                    linePolylines.push(polyline.encode(line.map((coords) => [coords[1], coords[0]])))
-                })
-            }
+                for (const line of stationLineRelationsDat) {
+                    if (line.lineName.replace("-", " ") == feature.properties.name.replace("-", " ")) {
+                        stationsOnLine = line.stations;
+                        lineCode = line.lineCode;
+                    }
+                }
 
-            const line = {
-                "name": feature.properties.name,
-                "lineColor": feature.properties.line_color,
-                "code": lineCode,
-                "type": feature.geometry.network == "singapore-lrt" ? "lrt" : "mrt",
-                "stations": stationsOnLine,
-                "polyline": linePolylines,
-            }
+                if (feature.geometry.type == "LineString") {
+                    linePolylines.push(polyline.encode(feature.geometry.coordinates.map((coords) => [coords[1], coords[0]])));
+                }
+                if (feature.geometry.type == "MultiLineString") {
+                    feature.geometry.coordinates.forEach((line) => {
+                        linePolylines.push(polyline.encode(line.map((coords) => [coords[1], coords[0]])));
+                    });
+                }
 
-            lines.push(line);
+                lines.push({
+                    "name": feature.properties.name,
+                    "lineColor": feature.properties.line_color,
+                    "code": lineCode,
+                    "type": feature.geometry.network == "singapore-lrt" ? "lrt" : "mrt",
+                    "stations": stationsOnLine,
+                    "polyline": linePolylines,
+                });
+            }
         }
 
     }

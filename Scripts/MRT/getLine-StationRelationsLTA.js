@@ -14,12 +14,12 @@ function getParentLines(stationCode) {
         'DT': ['DTL'],                                 // Downtown Line
         'TE': ['TEL'],                                 // Thomson-East Coast Line
         'BP': ['BPL'],                                 // Bukit Panjang LRT
-        'ST': ['SEL', 'SWL'],                          // Sengkang Town Centre -> belongs to both loops
-        'SE': ['SEL'],                                 // Sengkang East Loop
-        'SW': ['SWL'],                                 // Sengkang West Loop
-        'PT': ['PEL', 'PWL'],                          // Punggol Town Centre -> belongs to both loops
-        'PE': ['PEL'],                                 // Punggol East Loop
-        'PW': ['PWL']                                  // Punggol West Loop
+        'ST': ['STL'],                                 // Sengkang Town Centre
+        'SE': ['STL'],                                 // Sengkang East Loop
+        'SW': ['STL'],                                 // Sengkang West Loop
+        'PT': ['PTL'],                                 // Punggol Town Centre
+        'PE': ['PTL'],                                 // Punggol East Loop
+        'PW': ['PTL']                                  // Punggol West Loop
     };
     return mapping[prefix] || [];
 }
@@ -60,26 +60,9 @@ async function formStationLineRelations() {
             };
         }
 
-        // 2. Custom LRT Split Logic
-        // Remove the generic STL and PTL lines parsed from HTML
-        delete linesMap['STL'];
-        delete linesMap['PTL'];
-
-        // Inject our new explicit East/West loops
-        const customLRTs = {
-            'SEL': 'Sengkang LRT (East Loop)',
-            'SWL': 'Sengkang LRT (West Loop)',
-            'PEL': 'Punggol LRT (East Loop)',
-            'PWL': 'Punggol LRT (West Loop)'
-        };
-
-        for (const [code, name] of Object.entries(customLRTs)) {
-            linesMap[code] = {
-                lineCode: code,
-                lineName: name,
-                stations: []
-            };
-        }
+        // 2. Ensure STL and PTL are unified lines (overwrite whatever the HTML provided)
+        linesMap['STL'] = { lineCode: 'STL', lineName: 'Sengkang LRT', stations: [] };
+        linesMap['PTL'] = { lineCode: 'PTL', lineName: 'Punggol LRT', stations: [] };
 
         // 3. Extract Stations from XML
         const stationRegex = /<station id="([^"]+)" name="([^"]+)">\s*<code>([^<]+)<\/code>\s*<coordinates>([^<]*)<\/coordinates>/g;
