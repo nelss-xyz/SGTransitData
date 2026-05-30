@@ -55,7 +55,9 @@ async function parseMRTData() {
                             a.geometry.coordinates[0]
                         ]
                     }
-                    relavantExits.push(exitData)
+                    if (!relavantExits.some(e => e.exitName === exitData.exitName)) {
+                        relavantExits.push(exitData)
+                    }
                 }
                 if (a.geometry.type == "Polygon" && a.properties.station_codes === feature.properties.station_codes) {
                     relavantBoundaries.push(polyline.encode(a.geometry.coordinates[0].map((coords) => [coords[1], coords[0]])));
@@ -66,6 +68,12 @@ async function parseMRTData() {
                     })
                 }
             }
+
+            // Check if duplicates were found in source data (exit coordinates may be approximate)
+            const rawExitCount = features.filter(a =>
+                a.properties.stop_type === "entrance" && a.properties.station_codes === feature.properties.station_codes
+            ).length;
+            const hadDuplicateExits = rawExitCount > relavantExits.length;
 
 
             const stationCodes = feature.properties.station_codes.split("-").sort();
@@ -100,6 +108,7 @@ async function parseMRTData() {
                 "trainFirstLastData": relevantLTAData.trainFirstLastData,
                 "exits": relevantLTAData.exitLandmarkData.length > 0 ? relevantLTAData.exitLandmarkData : relavantExits,
                 "boundaries": relavantBoundaries,
+                ...(hadDuplicateExits && { "exitDataApproximate": true }),
             }
             stations.push(station);
         }
