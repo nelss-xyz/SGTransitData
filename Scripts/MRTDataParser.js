@@ -93,6 +93,16 @@ async function parseMRTData() {
                             }
                         }
                     }
+                    // Include any GeoJSON exits not present in LTA data
+                    for (const e of relavantExits) {
+                        if (!updatedExitData.some(u => u.exitName === e.exitName)) {
+                            updatedExitData.push({
+                                "exitName": e.exitName,
+                                "coordinates": e.coordinates,
+                                "landmarks": [],
+                            });
+                        }
+                    }
                     relevantLTAData.exitLandmarkData = updatedExitData;
                     break;
                 }
@@ -106,7 +116,8 @@ async function parseMRTData() {
                 "latitude": feature.geometry.coordinates[1],
                 "longitude": feature.geometry.coordinates[0],
                 "trainFirstLastData": relevantLTAData.trainFirstLastData,
-                "exits": relevantLTAData.exitLandmarkData.length > 0 ? relevantLTAData.exitLandmarkData : relavantExits,
+                "exits": (relevantLTAData.exitLandmarkData.length > 0 ? relevantLTAData.exitLandmarkData : relavantExits)
+                    .sort((a, b) => a.exitName.localeCompare(b.exitName, undefined, { numeric: true })),
                 "boundaries": relavantBoundaries,
                 ...(hadDuplicateExits && { "exitDataApproximate": true }),
             }
