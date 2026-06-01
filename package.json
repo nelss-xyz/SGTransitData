@@ -8,12 +8,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "data": "node index.js"
+    "data": "node index.js",
+    "mrt": "node Scripts/MRTDataParser.js"
   },
   "dependencies": {
     "@mapbox/polyline": "^1.2.1",
     "adm-zip": "^0.5.17",
     "cheerio": "^1.2.0",
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "proj4": "^2.20.8",
+    "shapefile": "^0.6.6",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "dbffile": "^1.12.0"
   }
 }

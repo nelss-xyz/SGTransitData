@@ -1,5 +1,6 @@
 .env
 /Data/Raw/bus/*
 /Data/Raw/mrt/*
+/Data/Raw/LTA/*
 node_modules/
 .DS_Store

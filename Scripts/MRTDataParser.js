@@ -1,233 +1,306 @@
-const axios = require('axios')
 const fs = require("fs");
-const { downloadMRTData } = require('./fetchMRT-railData');
+const { fetchOSMMRTData } = require('./fetchOSMMRTData');
 const { retrieveLTAMRTData } = require('./fetchLTAMRTData');
+const { parseLTASpatialData } = require('./parseLTASpatialData');
 var polyline = require('@mapbox/polyline');
 const { formStationLineRelations } = require('./MRT/getLine-StationRelationsLTA');
 require('dotenv').config();
 
-
-
-let RawMRTData;
-let LTAMRTData;
-let stationLineRelationsDat;
-
 const testingMode = process.env.TESTING_MODE;
+
+// Entry point is after all module-level declarations (see bottom of constants block)
+
+
+// ─── Official LTA hex colour codes for each line ────────────────────────────
+
+const officialLineColors = {
+    'NSL': '#D42E12',
+    'EWL': '#009645',
+    'NEL': '#9900AA',
+    'CCL': '#FA9E0D',
+    'DTL': '#005EC4',
+    'TEL': '#9D5B25',
+    'BPL': '#748477',
+    'STL': '#748477',
+    'PTL': '#748477',
+};
+
+// Map from station code prefix → line code
+const prefixToLineCode = {
+    'EW': 'EWL', 'CG': 'EWL',
+    'NS': 'NSL',
+    'NE': 'NEL',
+    'CC': 'CCL', 'CE': 'CCL',
+    'DT': 'DTL',
+    'TE': 'TEL',
+    'BP': 'BPL',
+    'ST': 'STL', 'SE': 'STL', 'SW': 'STL', 'STC': 'STL',
+    'PT': 'PTL', 'PE': 'PTL', 'PW': 'PTL', 'PTC': 'PTL', 'CP': 'PTL',
+};
+
+const lineCodeToName = {
+    'EWL': 'East West Line',
+    'NSL': 'North South Line',
+    'NEL': 'North East Line',
+    'CCL': 'Circle Line',
+    'DTL': 'Downtown Line',
+    'TEL': 'Thomson-East Coast Line',
+    'BPL': 'Bukit Panjang LRT',
+    'STL': 'Sengkang LRT',
+    'PTL': 'Punggol LRT',
+};
+
+function getLineCodeForStationCode(code) {
+    const prefix = code.replace(/[0-9]/g, '');
+    return prefixToLineCode[prefix] || null;
+}
+
+// ─── Entry Point ─────────────────────────────────────────────────────────────
 
 (async () => {
     if (!testingMode) {
-        await downloadMRTData()
-        await retrieveLTAMRTData()
-        await formStationLineRelations()
-        await parseMRTData()
+        await fetchOSMMRTData();
+        await retrieveLTAMRTData();
+        await parseLTASpatialData();
+        await formStationLineRelations();
+        await parseMRTData();
+    } else {
+        await parseMRTData();
     }
-    else {
-        await parseMRTData()
-    }
-})()
+})();
+
+
+// ─── Main Parser ─────────────────────────────────────────────────────────────
 
 async function parseMRTData() {
-    RawMRTData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/mrt.json", "utf8"));
-    LTAMRTData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/lta_mrt_data.json", "utf8"));
-    stationLineRelationsDat = JSON.parse(fs.readFileSync("./Data/Raw/mrt/mrt_lines_station_relation_data.json", "utf8"));
+    console.log('\n[Parser] Loading data files...');
 
-    const features = RawMRTData.features;
-    const LTAData = LTAMRTData;
-    const stations = [];
-    const lines = [];
+    const osmData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/osm_mrt_data.json", "utf8"));
+    const ltaMrtData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/lta_mrt_data.json", "utf8"));
+    const ltaSpatialData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/lta_spatial_data.json", "utf8"));
+    const lineRelationsData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/mrt_lines_station_relation_data.json", "utf8"));
 
-    for (const feature of features) {
-        const relavantExits = []
-        let relavantBoundary;
-        let relavantBoundaries = [];
-        let relevantLTAData = {
-            exitLandmarkData: [],
-            trainFirstLastData: [],
-        };
+    const osmStations = osmData.stations;
+    const osmRoutes = osmData.routes;
 
-        if (feature.properties.stop_type === "station") {
-            for (const a of features) {
-                if (a.properties.stop_type === "entrance" && a.properties.station_codes === feature.properties.station_codes) {
-                    const exitData = {
-                        exitName: a.properties.name,
-                        coordinates: [
-                            a.geometry.coordinates[1],
-                            a.geometry.coordinates[0]
-                        ]
-                    }
-                    if (!relavantExits.some(e => e.exitName === exitData.exitName)) {
-                        relavantExits.push(exitData)
-                    }
-                }
-                if (a.geometry.type == "Polygon" && a.properties.station_codes === feature.properties.station_codes) {
-                    relavantBoundaries.push(polyline.encode(a.geometry.coordinates[0].map((coords) => [coords[1], coords[0]])));
-                }
-                if (a.geometry.type == "MultiPolygon" && a.properties.station_codes === feature.properties.station_codes) {
-                    a.geometry.coordinates.forEach((element) => {
-                        relavantBoundaries.push(polyline.encode(element[0].map((coords) => [coords[1], coords[0]])));
-                    })
-                }
-            }
+    const outputStations = [];
 
-            // Check if duplicates were found in source data (exit coordinates may be approximate)
-            const rawExitCount = features.filter(a =>
-                a.properties.stop_type === "entrance" && a.properties.station_codes === feature.properties.station_codes
-            ).length;
-            const hadDuplicateExits = rawExitCount > relavantExits.length;
-
-
-            const stationCodes = feature.properties.station_codes.split("-").sort();
-            for (const b of LTAData) {
-                const ltaCodes = b.id.split("-").sort();
-                if (stationCodes.join("-") === ltaCodes.join("-") || stationCodes.includes(b.id)) {
-                    relevantLTAData.trainFirstLastData = b.directions;
-                    const updatedExitData = [];
-                    for (const exit of b.exits) {
-                        for (const e of relavantExits) {
-                            if (e.exitName == exit.exit) {
-                                updatedExitData.push({
-                                    "exitName": e.exitName,
-                                    "coordinates": e.coordinates,
-                                    "landmarks": exit.landmarks,
-                                });
-                            }
-                        }
-                    }
-                    // Include any GeoJSON exits not present in LTA data
-                    for (const e of relavantExits) {
-                        if (!updatedExitData.some(u => u.exitName === e.exitName)) {
-                            updatedExitData.push({
-                                "exitName": e.exitName,
-                                "coordinates": e.coordinates,
-                                "landmarks": [],
-                            });
-                        }
-                    }
-                    relevantLTAData.exitLandmarkData = updatedExitData;
-                    break;
-                }
-            }
-
-            const station = {
-                "name": feature.properties.name,
-                "name-chinese": feature.properties["name_zh-Hans"],
-                "name-tamil": feature.properties.name_ta,
-                "codes": feature.properties.station_codes.split("-"),
-                "latitude": feature.geometry.coordinates[1],
-                "longitude": feature.geometry.coordinates[0],
-                "trainFirstLastData": relevantLTAData.trainFirstLastData,
-                "exits": (relevantLTAData.exitLandmarkData.length > 0 ? relevantLTAData.exitLandmarkData : relavantExits)
-                    .sort((a, b) => a.exitName.localeCompare(b.exitName, undefined, { numeric: true })),
-                "boundaries": relavantBoundaries,
-                ...(hadDuplicateExits && { "exitDataApproximate": true }),
-            }
-            stations.push(station);
+    for (const ltaStation of ltaSpatialData.stations) {
+        // Find OSM node to patch Tamil name
+        let nameTa = '';
+        const osmMatch = osmStations.find(s => {
+            const refMatch = s.ref && s.ref.split(';').map(r => r.trim()).some(r => ltaStation.codes.includes(r));
+            const exactNameMatch = s.name && s.name.toLowerCase() === ltaStation.nameEn.toLowerCase();
+            return refMatch || exactNameMatch;
+        });
+        if (osmMatch && osmMatch.nameTa) {
+            nameTa = osmMatch.nameTa;
         }
 
-        // Official LTA hex colour codes for each line
-        const officialLineColors = {
-            'North South Line':              '#D42E12',
-            'East West Line':                '#009645',
-            'North East Line':               '#9900AA',
-            'Circle Line':                   '#FA9E0D',
-            'Downtown Line':                 '#005EC4',
-            'Thomson-East Coast Line':       '#9D5B25',
-            'Bukit Panjang LRT':             '#748477',
-            'Sengkang LRT (East Loop)':      '#748477',
-            'Sengkang LRT (West Loop)':      '#748477',
-            'Punggol LRT (East Loop)':       '#748477',
-            'Punggol LRT (West Loop)':       '#748477',
-        };
+        // Find LTA scraped data for train times and landmarks
+        const relevantLTAData = findLTAData(ltaMrtData, ltaStation.codes);
 
-        if (feature.properties.line_color) {
-            // Check if this feature is one of the LRT loops that should be merged
-            const lrtMergeMap = {
-                'Sengkang LRT (East Loop)': 'STL',
-                'Sengkang LRT (West Loop)': 'STL',
-                'Punggol LRT (East Loop)': 'PTL',
-                'Punggol LRT (West Loop)': 'PTL',
-            };
-            const mergedLineCode = lrtMergeMap[feature.properties.name];
+        // Map and merge exits
+        const mergedExits = [];
+        const scrapedExits = relevantLTAData.exits || [];
 
-            if (mergedLineCode) {
-                // Find or create the unified line entry
-                let existingLine = lines.find(l => l.code === mergedLineCode);
-                const newPolylines = [];
+        // Add exits from spatial data
+        for (const spatialExit of ltaStation.exits) {
+            const scrapedExit = scrapedExits.find(e => e.exit.toLowerCase() === spatialExit.exitCode.toLowerCase() || e.exit.toLowerCase() === spatialExit.exitCode.replace('Exit ', '').toLowerCase());
+            mergedExits.push({
+                exitName: spatialExit.exitCode,
+                coordinates: spatialExit.coordinates,
+                landmarks: scrapedExit ? scrapedExit.landmarks : []
+            });
+        }
 
-                if (feature.geometry.type == "LineString") {
-                    newPolylines.push(polyline.encode(feature.geometry.coordinates.map((coords) => [coords[1], coords[0]])));
-                }
-                if (feature.geometry.type == "MultiLineString") {
-                    feature.geometry.coordinates.forEach((seg) => {
-                        newPolylines.push(polyline.encode(seg.map((coords) => [coords[1], coords[0]])));
-                    });
-                }
-
-                if (existingLine) {
-                    // Merge polylines into the already-created unified entry
-                    existingLine.polyline.push(...newPolylines);
-                } else {
-                    // First time seeing this unified line — create the entry
-                    const relationsEntry = stationLineRelationsDat.find(l => l.lineCode === mergedLineCode);
-                    const lrtNames = { 'STL': 'Sengkang LRT', 'PTL': 'Punggol LRT' };
-                    lines.push({
-                        "name": lrtNames[mergedLineCode],
-                        "lineColor": officialLineColors[feature.properties.name] ?? feature.properties.line_color,
-                        "code": mergedLineCode,
-                        "type": "lrt",
-                        "stations": relationsEntry ? relationsEntry.stations : [],
-                        "polyline": newPolylines,
-                    });
-                }
-            } else {
-                // Normal (non-merged) line handling
-                let stationsOnLine = [];
-                let linePolylines = [];
-                let lineCode = "";
-
-                for (const line of stationLineRelationsDat) {
-                    if (line.lineName.replace("-", " ") == feature.properties.name.replace("-", " ")) {
-                        stationsOnLine = line.stations;
-                        lineCode = line.lineCode;
-                    }
-                }
-
-                if (feature.geometry.type == "LineString") {
-                    linePolylines.push(polyline.encode(feature.geometry.coordinates.map((coords) => [coords[1], coords[0]])));
-                }
-                if (feature.geometry.type == "MultiLineString") {
-                    feature.geometry.coordinates.forEach((line) => {
-                        linePolylines.push(polyline.encode(line.map((coords) => [coords[1], coords[0]])));
-                    });
-                }
-
-                lines.push({
-                    "name": feature.properties.name,
-                    "lineColor": officialLineColors[feature.properties.name] ?? feature.properties.line_color,
-                    "code": lineCode,
-                    "type": feature.geometry.network == "singapore-lrt" ? "lrt" : "mrt",
-                    "stations": stationsOnLine,
-                    "polyline": linePolylines,
+        // Add exits that are in scraped data but missing from spatial data
+        for (const scrapedExit of scrapedExits) {
+            const exists = mergedExits.some(e => e.exitName.toLowerCase() === scrapedExit.exit.toLowerCase() || e.exitName.toLowerCase() === `exit ${scrapedExit.exit}`.toLowerCase());
+            if (!exists) {
+                mergedExits.push({
+                    exitName: scrapedExit.exit.length === 1 ? `Exit ${scrapedExit.exit}` : scrapedExit.exit,
+                    coordinates: [],
+                    landmarks: scrapedExit.landmarks
                 });
             }
         }
 
+        mergedExits.sort((a, b) => a.exitName.localeCompare(b.exitName, undefined, { numeric: true }));
+
+        // Encode boundaries
+        const boundaries = ltaStation.boundaries.map(poly => polyline.encode(poly));
+
+        const station = {
+            name: ltaStation.nameEn,
+            "name-chinese": ltaStation.nameZh,
+            "name-tamil": nameTa,
+            codes: ltaStation.codes.sort(),
+            type: 'unified', // LTA data provides unified boundaries/exits for interchanges
+            latitude: ltaStation.latitude || (osmMatch ? osmMatch.lat : 0),
+            longitude: ltaStation.longitude || (osmMatch ? osmMatch.lon : 0),
+            trainFirstLastData: relevantLTAData.trainFirstLastData || [],
+            exits: mergedExits,
+            boundaries: boundaries
+        };
+
+        if (ltaStation.hasDuplicateExits) {
+            station.exitDataApproximate = true;
+        }
+
+        outputStations.push(station);
     }
 
+    // Sort stations alphabetically
+    outputStations.sort((a, b) => a.name.localeCompare(b.name));
 
+    console.log(`[Parser] Built ${outputStations.length} station objects`);
+
+    // ── Step 6: Build line objects ──────────────────────────────────────────
+    const outputLines = buildLines(osmRoutes, lineRelationsData);
+
+    console.log(`[Parser] Built ${outputLines.length} line objects`);
+
+    // ── Step 7: Write output ────────────────────────────────────────────────
     const mrtData = {
-        stations, lines
-    }
+        stations: outputStations,
+        lines: outputLines,
+    };
 
     fs.writeFile('./Data/Output/mrt/mrt.json', JSON.stringify(mrtData), (err) => {
         if (err) {
-            console.error("Error saving MRT data:", err)
+            console.error("Error saving MRT data:", err);
         } else {
-            console.log("MRT data generated and saved successfully!")
+            console.log("\n[Parser] MRT data generated and saved successfully!");
         }
-    })
+    });
 }
+
+
+// ─── Line Builder ────────────────────────────────────────────────────────────
+
+/**
+ * Builds the line objects from OSM route data + LTA relations.
+ *
+ * OSM has individual route relations per direction. We merge them by line.
+ * LRT loops (Sengkang/Punggol) are unified into STL/PTL.
+ */
+function buildLines(osmRoutes, lineRelationsData) {
+    const lines = [];
+
+    // LRT line classification
+    const lrtLineMap = {
+        'BPL': { type: 'lrt' },
+        'STL': { type: 'lrt' },
+        'PTL': { type: 'lrt' },
+    };
+
+    // Map OSM route names/refs to our line codes
+    // OSM route relations may have `ref` like "NSL", "EWL", etc.
+    // or names like "North South Line", etc.
+    const routesByLineCode = {};
+
+    for (const route of osmRoutes) {
+        let lineCode = null;
+
+        // Try matching by ref first
+        if (route.ref && lineCodeToName[route.ref]) {
+            lineCode = route.ref;
+        }
+
+        // Try matching by name
+        if (!lineCode) {
+            for (const [code, name] of Object.entries(lineCodeToName)) {
+                if (route.name.includes(name) || route.name.replace(/-/g, ' ').includes(name.replace(/-/g, ' '))) {
+                    lineCode = code;
+                    break;
+                }
+            }
+        }
+
+        // Try matching LRT loops
+        if (!lineCode) {
+            if (/sengkang/i.test(route.name)) lineCode = 'STL';
+            else if (/punggol/i.test(route.name)) lineCode = 'PTL';
+            else if (/bukit\s*panjang/i.test(route.name)) lineCode = 'BPL';
+        }
+
+        if (lineCode) {
+            if (!routesByLineCode[lineCode]) {
+                routesByLineCode[lineCode] = [];
+            }
+            routesByLineCode[lineCode].push(route);
+        } else {
+            console.warn(`[Parser] Could not classify OSM route: "${route.name}" (ref: ${route.ref})`);
+        }
+    }
+
+    // Build line objects
+    for (const lineRelation of lineRelationsData) {
+        const lineCode = lineRelation.lineCode;
+        const lineName = lineRelation.lineName;
+        const osmLineRoutes = routesByLineCode[lineCode] || [];
+
+        // Collect all polyline segments from all OSM route relations for this line
+        const linePolylines = [];
+
+        // Deduplicate segments: OSM has forward/backward route relations
+        // We want unique geometry, so we take segments from the first route that has them,
+        // or merge if they have different geometry
+        const seenSegments = new Set();
+
+        for (const route of osmLineRoutes) {
+            for (const segment of route.segments) {
+                // Create a simple hash of the segment for deduplication
+                const hash = segment.map(p => `${p[0].toFixed(6)},${p[1].toFixed(6)}`).join('|');
+                if (!seenSegments.has(hash)) {
+                    seenSegments.add(hash);
+                    linePolylines.push(polyline.encode(segment));
+                }
+            }
+        }
+
+        const isLrt = !!lrtLineMap[lineCode];
+
+        lines.push({
+            name: lineName,
+            lineColor: officialLineColors[lineCode] || '#888888',
+            code: lineCode,
+            type: isLrt ? 'lrt' : 'mrt',
+            stations: lineRelation.stations,
+            polyline: linePolylines,
+        });
+    }
+
+    return lines;
+}
+
+
+// ─── LTA Data Lookup ─────────────────────────────────────────────────────────
+
+/**
+ * Finds LTA station data (exit landmarks + first/last train) matching the given codes.
+ */
+function findLTAData(ltaData, stationCodes) {
+    const sortedCodes = [...stationCodes].sort();
+    const result = {
+        trainFirstLastData: [],
+        exits: []
+    };
+
+    for (const entry of ltaData) {
+        const ltaCodes = entry.id.split('-').sort();
+        if (sortedCodes.join('-') === ltaCodes.join('-') || stationCodes.some(c => c === entry.id)) {
+            result.trainFirstLastData = entry.directions || [];
+            result.exits = entry.exits || [];
+            break;
+        }
+    }
+
+    return result;
+}
+
 
 module.exports = {
     parseMRTData
-}
+};
