@@ -136,7 +136,6 @@ async function parseMRTData() {
             "name-chinese": ltaStation.nameZh,
             "name-tamil": nameTa,
             codes: ltaStation.codes.sort(),
-            type: 'unified', // LTA data provides unified boundaries/exits for interchanges
             latitude: ltaStation.latitude || (osmMatch ? osmMatch.lat : 0),
             longitude: ltaStation.longitude || (osmMatch ? osmMatch.lon : 0),
             trainFirstLastData: relevantLTAData.trainFirstLastData || [],
