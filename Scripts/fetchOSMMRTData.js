@@ -57,8 +57,11 @@ area["ISO3166-1"="SG"]["admin_level"="2"]->.sg;
   way(area.sg)["railway"="station"]["public_transport"="station"]["ref"~"^(BP|PE|PW|SE|SW|STC|PTC)"];
 )->.stations;
 
-// Output stations only for Tamil names
-(.stations;);
+// All subway entrances
+node(area.sg)["railway"="subway_entrance"]->.entrances;
+
+// Output stations and entrances
+(.stations; .entrances;);
 out body;
 >;
 out skel qt;
@@ -90,6 +93,7 @@ out geom;
 function processStationsData(data) {
     const nodes = {};    // id -> node element (for resolving way node refs)
     const stations = [];
+    const entrances = [];
 
     // First pass: index all nodes by ID (needed to resolve way geometries)
     for (const el of data.elements) {
@@ -115,11 +119,20 @@ function processStationsData(data) {
                     station: el.tags.station || '',
                 });
             }
+            if (el.tags.railway === 'subway_entrance') {
+                entrances.push({
+                    osmId: el.id,
+                    name: el.tags.ref || el.tags.name || 'Unlabeled',
+                    lat: el.lat,
+                    lon: el.lon,
+                });
+            }
         }
     }
 
     return {
         stations,
+        entrances,
     };
 }
 

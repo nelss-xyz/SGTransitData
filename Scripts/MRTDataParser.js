@@ -72,6 +72,22 @@ function getLineCodeForStationCode(code) {
 
 // ─── Main Parser ─────────────────────────────────────────────────────────────
 
+/**
+ * Calculate distance between two coordinates in meters.
+ */
+function haversineDistance(lat1, lon1, lat2, lon2) {
+    const toRad = (value) => (value * Math.PI) / 180;
+    const R = 6371e3; // Earth radius in meters
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
 async function parseMRTData() {
     console.log('\n[Parser] Loading data files...');
 
@@ -81,6 +97,7 @@ async function parseMRTData() {
     const lineRelationsData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/mrt_lines_station_relation_data.json", "utf8"));
 
     const osmStations = osmData.stations;
+    const osmEntrances = osmData.entrances || [];
     const osmRoutes = osmData.routes;
 
     const outputStations = [];
@@ -123,6 +140,35 @@ async function parseMRTData() {
                     coordinates: [],
                     landmarks: scrapedExit.landmarks
                 });
+            }
+        }
+
+        const stationLat = ltaStation.latitude || (osmMatch ? osmMatch.lat : 0);
+        const stationLon = ltaStation.longitude || (osmMatch ? osmMatch.lon : 0);
+
+        // Patch empty exits with OSM entrances
+        for (const exit of mergedExits) {
+            if (!exit.coordinates || exit.coordinates.length === 0) {
+                const nearbyOsmEntrances = osmEntrances.filter(e => haversineDistance(e.lat, e.lon, stationLat, stationLon) < 400);
+                const match = nearbyOsmEntrances.find(e => e.name.toLowerCase() === exit.exitName.toLowerCase() || `exit ${e.name}`.toLowerCase() === exit.exitName.toLowerCase());
+                if (match) {
+                    exit.coordinates = [match.lat, match.lon];
+                }
+            }
+        }
+        
+        // If there are still no exits or we missed some from OSM, we can add all nearby OSM entrances that aren't already in mergedExits
+        if (stationLat && stationLon) {
+            const nearbyOsmEntrances = osmEntrances.filter(e => haversineDistance(e.lat, e.lon, stationLat, stationLon) < 400);
+            for (const osmExit of nearbyOsmEntrances) {
+                const exitName = osmExit.name.length === 1 ? `Exit ${osmExit.name}` : osmExit.name;
+                if (!mergedExits.some(e => e.exitName.toLowerCase() === exitName.toLowerCase())) {
+                    mergedExits.push({
+                        exitName: exitName,
+                        coordinates: [osmExit.lat, osmExit.lon],
+                        landmarks: []
+                    });
+                }
             }
         }
 
