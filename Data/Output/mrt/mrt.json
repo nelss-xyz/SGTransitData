@@ -1347,22 +1347,6 @@
                     "name": "7-ELEVEN",
                     "unit": "#B1-02/#B1-03",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -1647,24 +1631,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "oceGyukxR@A?CAA?C?CFAHAFAH???@B????B?@?BA@?B?BA@???DA??HAJA@?AGAE@A@B^GHAB?DAB?BA????????@?@?@?FBF@@??@z@Mz@KFARCB?JA?AD???HABAD?DA@?@???@?@ANABAHA@?BA?A??AA?ABAB?FA??BP?@??@B?@??@D???@@F?B?@@B?@??@D?????F@??@@F?F@F?H?J?B?BE?E?E?E??G?A?G?E?A?G?A@A?A@E?A?A??AC?A?A?AC?A?A?A??@AA???A?A?AAG?AAA?A?A?CACC@A?I@G@??C?A???E@K@??A@E?OBA?C?E@??G@C?KBc@D?DFAHAJAVE??D?@A???@?@@B???@?@?@@B???@???@???@@D@D?????@???@?@?@@B??A?IBO@I@WDBP@H@BE?K@C@?@?@?B@@C?A?MBM@E@E@SBSBYD[BG@AIAGAGAE?EAEQBK@A?C??@G@A?C???A?A@A?G@??G@C?SBSB??C?C@?A???C??AA?A?A??AE?E?A??A??C?????A???A?AAA?C?A??AAHA@?FA?A??BEBC?A????@C"
             ]
@@ -1935,24 +1902,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "gqcGevgyRUp@EBC@GREJ??CH?@CFADA@AB?@A@?@?@A@ADCF?@DB??LD@?????D@EL?@??ABEJRFB@????A@g@~AUImAvDGCQGICe@Ol@iB@@ZaANc@e@FCQ`@E@Gt@QBKBG??@CBKBGBG?????A?A@A??@C@E??BG@G@A@C????@E??@EAACCRm@Ts@LDJD??B@"
             ],
@@ -2049,24 +1999,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "ibdGaajyRJaIAE@EF@Z?T?AW?E?IAE?????G?E?E?E?E?AAA?A?????E?A?E?E?C?A?A???EEqAP?JNBr@I@?D@B?D?@?B?D?D???D?@?????B??@D?D?F?B?D?@?F??@B?D???D?V?HN?A\\?p@QLGnE_@??XG?[AG?"
             ]
@@ -2186,24 +2119,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "wx|FskzxRZVDB??HM`@e@XRA@???@e@j@A@EDx@n@LJXTb@\\BB??@?BB??DEPNTP@A??PSBBQR??A@DB?@??JHGFKIAB???@A???EF??b@Z?@@@B@@???BBDDBBB@DD????JF?@@@@@B@DBDD^XA??@??A@??CBA@?@EC?AUOMKAAAA??AAA?CCGG????EEEA?AEEGECBUQGCKKA???CA?ACA??CC??CCAAGE?@??AAQMAA?A@AAAECGGEEA?GGq@g@GGeAy@AABE????@AIG@A?A@A??@A????BC??IG??@??A@A@AKI@AKIBE"
             ]
@@ -2299,24 +2215,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "up_G_r|xRWw@[}@i@a@NU???AAACI?AAA@???BABADADA????@A??@???BA@ABADA??DA@APSt@h@QTCD??CBCDA@???@??A@????A@@DDJBH@@FP@@?BDJODVv@EBWHGB"
             ]
@@ -2785,24 +2684,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "sk`Goh|xRILQMAAIGCCCCAAA@CCCC????CC??????A??AECEC?AEAAAGEQKOKOKOIEFIJCBABCBA@A@ABA?AB??????CD?As@i@A?CD?????@?AWQECCCCA[UAA??AAAAAACA{@q@ABABA??@A@???AA@????ABORECKNOKHMNQCC@ADE[WAACEGGMI@C@A@A??@A??@A???AAAGGWSCCCA?A??????HK??FG?A??PSBEdBrAN@JIZSXTFB@@XT??UZEDfAz@~@j@A?JF??B@??PLf@Z@@B@FDB@@@??@@????B@?@@ABBBB??@@DB@BJFPL"
             ]
@@ -3409,22 +3291,6 @@
                     "name": "CHEERS CONVENIENCE STORE",
                     "unit": "#B2-K1",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -4157,24 +4023,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "kzlGorbyR?@?D???@?@???@?@AD?D?@?????D??AD??G?MA[Ae@ASA?HAF?BUA???K@II?eBIAF?PC?SAEA?D]A?CC??Am@A@Qd@@?Es@CEAG?MAg@A@E?A???G?E?E?A@A?A?A???E??Z@?C@C?I?A?CGA@S`@BABH?ANGA?@F?XB?A`@@J??A?AEA@OB?@CP@?AD??@j@B?NV@hBF?GT@??D???T@@?N??DALC???C??D?@?D?@?@?@ABf@B@?"
             ]
@@ -4432,22 +4281,6 @@
                     "name": "JC GLOBAL",
                     "unit": "#B1-02",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -5228,22 +5061,6 @@
                     "name": "MOHIDEEN ENTERPRISE",
                     "unit": "#01-K1",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -6156,24 +5973,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "sgjGwrixR??MFg@XSJULQJa@T[NCBC@KFC@??A@E@IFC@A?CBE@?@_Ad@?ACC???AACCEGKCEMF?AACUa@f@Yd@W??@?@AJB@???F@D@@?@?@?????F?@?B?J?FE@???@AZQ\\SZSVMDCLI@?h@Y@BDD@DBB?@@B??BB@DBB???@@@@@"
             ]
@@ -6601,40 +6401,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "aczFg|xxRFFDBA@FFFD????TW???ABCLO??@CNSBC?@`@e@DI@C@@@A@ABEECDE????????@A@?????@C@@@CBC??@C?A??@@@A?A@A???AA???@A@A?????A??BE@A?A@????A@?AABC?A@A????@C??A?@???@AAA@A??AABC@CDIDI?@@E@CZo@HMBE@Et@yA??@AAE?A???AKEGERa@FDJFB@@?????@EBC?AR_@Ra@AAAEGSIGFM@AJD@B@H@?@H@@@??A@?FMBCBGB??@JD@@B@????@?@@DB?@??CD???@c@z@ABg@~@GN[n@ADSb@GJGJs@xAOZA@A?A?AB????AAAB??DF?@EDAAEC?@DB@@??A@CBAA??ABA@????@?A??????@????ED??EF??A?????A@??A@?????@???@A@C@???@A?????A@?@??@?A@AB??@@C???A@A@?@CDQTEDEF?@CDA@A@ABCBCBABCBCDCB??CD??CBCBCDCBEDCBABCBEB?@EB???A??A?CC?AAACA??????AAAAA???CCCC??CA???A??MKOKJKHM",
                 "w_zF{byxR??IIGGBCFFFDBCXR@A@A@C??FD??CBA@A@b@X?@@?BF??@B@@@@@B???@@?BFBBBF@@z@r@DB????JJf@^NL??@AFD????@CP[Te@JQ??@?FB???@HB??@@u@xADB??CD??dA|@????HFLJJJABA?A@???@??EBADA??@IHj@d@A@??CBABA???????CD??MNIH@?@@ZVMP[YAA??A?CEA??????AA???EETWHK@A@CAAYUiB{A?@A???AB??A@KKCCSOA@A@??EC??AA??EDCDOP??AAA??A????[`@GHHFGFWQLQ\\c@A?TY@@@C@AIG??BA?ABCw@o@ABA@WUEC??ECCC??A??AA????AAAA?AAAA??A??AA????AAAAA??CAA?CDCDe@f@EC?A??DGAAFG@@BEX[BE??@CIGAAOMQMYUCC??@?BE@A??????@ABEBA@EBC@A@A??@A??B@@??ABC@?@C@A"
@@ -7616,24 +7383,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "ypzFgpyxRNDJB@????@@?FBD@??HBB@PFHBd@NF@@@B@F@@??@@?@???????DBD@D@??B@D@HBb@\\OR?@LLNJRNA@CB?@MI@AMK?ACAa@[BC@C@AUQIICA??AA??MEA???A?QGYK??A?CACAEA??EAEAMESGME?@CH???BABAB?@??AF??DD@?r@j@EDIHIJONOMLOLM@A[WA@MLKJ?@CCa@]MGOM?AGEEE??CCEEEACAsBc@[\\e@a@USAACCAAA???GA@G@??A?AFU@I@A^c@TW@A@?BBj@h@p@j@RFH@NDD@DDF@?@F@B?LD??@?@@H@B@NDH@NDH@"
             ]
@@ -8948,22 +8698,6 @@
                     "name": "THE FOOD INN",
                     "unit": "#B1-02/03/04",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -9313,24 +9047,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "}}xFiuzxR??GC??@??A@A??@C????BG@?^q@h@_A??BE?A??@C@????A????@A?A??@A@A??@ADALC@@FB??DB@@@@B@????@?@@B@DB??DBBBCDCD?@CDA??@??A@??CD?@EFA@FB?@Wd@[j@GEILKRA@???@A@A@?@?AA???AAA?EC??CC??EA??????AAAAA???AAAACA?@ILAA??A?AAACGIBC?A??@????A@A"
             ]
@@ -10096,22 +9813,6 @@
                     "name": "7-ELEVEN",
                     "unit": "#01-02",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -10451,24 +10152,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "cp_Gec{xRb@a@GIDC?ABA???AFE????@A??DC?A@?@AFF?Aj@j@@??A@@????\\SBDFD????BBBB?@@????@??pAu@BALG@ABADC?C???A????@G@E??AAA?EEAAi@_@HMj@b@??DB@@@C@A?C?E@G?A@E???C???C@E???ABS?GHI?AA??E???UAACe@PABf@A?@RBBDEJH]`@CBAL?@??AF?@?@A@?@?@?FAB?BAD?B????ALAF???DUL??C@A@CBA?wAv@@B@@DDDEDDVWLNa@^??A@??CBA@??A@A??@??CBCBA?EDrCxC@BJLCBSPQPLN????FF??FF??????@@@@??BB?????@HF??DA?@BADAD?DA??@ANCB?FAHABL?@I@?@SBG@AAE@E@E?A@C?@?A@A???C?????A?A?IBI@E?????A@C???EH?@????@B?????@??@B???????B@H@B?B@@BL?@DTQBIe@@AAC?CAI?AAA???A??AC????????@?AE????AA??AAA?AAA???A?E@A???C?A@????C?????????????C@??A???A?????I@A?G@?@QBUDCUd@I@?DAD???DA????DA??@???@?????????HAFA@?@A@?@?@?????@A@?@G?A@A?A???ABKAA??]]GF@@A?}@_AHIWWLKSSLOaAeAOLUU??GGGF??KJ???@BBKHEE???AGE??CECA?A????CA??AA????CCAA@?CC??CCAAc@e@JKNN"
             ]
@@ -10814,24 +10498,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "{j{Fk_yxRA?UGQKe@UFKA?AAECA?CCEACCCA??A??????AA?ECCAEC??GCCAaCkAHO??LW??FM`CjAHD@?@?BBDBD@DB??@@@@@???JD@@??DBB@D@\\R^PB@HD??l@Xb@T??CB?@EF?@MTGL?@a@Si@WCB?@OE"
             ]
@@ -11090,24 +10757,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "sdaG_q~xR??MWBA@A??PI?A??DA??@A??@A@?PZFHDJPZ@BFH?@DH@?NI`AhBIF??C@A@A???A@??A??@??A?C@??A@A@A?C@CBA?C@A@EBQHo@kADAm@gAULWg@b@W"
             ]
@@ -11628,22 +11278,6 @@
                 {
                     "name": "SAM",
                     "type": "ATM"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -12125,24 +11759,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "geiGydjxRJBCJXDCLA@AF?@p@LB@ZF?AWG@G@Ef@J@??AD@F@JBD@@?D@\\FAB?B??ZFD@`@FCTA?AF?@AB?????B???@A????DAB?@AF???@??A@???BA@?@??AB?@??A?EAA?CAEAA??A??C?ICA?A?AA??A???KAKC??A?????A@?@AB??AHIDa@Ia@GECCCBI?A?A@C?E[G[G?@IAIA?AUEMC????EAA??C?A??@A?A?A@C?A??@E?A???A??@??G@??C?A@A?A?A?A@??A???A@E@A?E@A?A??@EBOB?BK"
             ]
@@ -12527,24 +12144,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "__kGcobyRx@??GL??EBCB??y@A??Ig@??O~@??xAH??BJ??FD?B?F?????D?D?D?B???@???D???@?B???@?B???@?B?N?r@??UfA??AR??Vf@?F??F?V?B?FG?C?CD?Xo@?E?gA?E??U?Ik@?O?E?????C???A?C?A???C?A???A???C?E?E???I?E?M??dAuB??mA?[?G"
             ]
@@ -12640,24 +12240,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "_qgGwljxRHC\\If@M?A??AEAC??CMVGJCJCBH?@@B@D??JCJC??@D?@?@@@@B?@?@????@B?@@B?@@@?@@D???@ODE@C???GBKBCA??YH[HG@A@A?MBQFG@???@???@@D@D@BGJGJCDEDA@?@ED?@??G@GBODCKCKQDQFCM?ACG?AAAIB?CAC??AE??AA?A??AA?A??AEAE??AE???AAA@?TGTGB@@?d@M??BA@???ZI??DA"
             ]
@@ -12753,24 +12336,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "u`~Fij{xR\\_@NLCDJJ[\\NHdAl@FDLF??BBB@@@@?B@??@@B@?@@?h@k@@?@A@??@??BBb@`@c@b@NHCDA@???@GH?@CBAB?@A????@A@A@a@U@AUMGCYQAAC?AAEC??CCCD?@CBEHA@??eAm@CCBG@A@A@EBC??SKe@YA?EC@?@C?A??????@??ABC?C@AFIBG@@B@?@B@?@B@@?FG"
             ]
@@ -13492,24 +13058,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "sycGwxeyRRG?@@?@BHT@BFP@D@?@F@@??BDD???????@???FAHA@?BAD???B?ZE?B@FB\\OBEHd@nERPJ`AM@C]G@C?????A?IEEEGE?A????A??AECAAAAAAECAIMoAAI?AOsAAQACISA??CGQ??ACOBEWE[M]@?CE"
             ]
@@ -14717,24 +14266,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "m{cGwhmxRXeA?CAAMC??GCEAA?A?????AAEAA?CAA?A?KEA?ICCAC?@IBI@GBIB@D@B@B???B@D@D@@@@?B@@?B@B?????@@D@B?B@ND@?H[A?FUHW@@D@??B@D?@@??????@?D@D@????FB??GTGV???AQn@Qp@?BCFGVA@CJOj@?@?@??@@B?FBHHHFFF@@@?@BBBB@ABAD?@????ADA@?BADA@???@??CFERGTYIEAUG??EA??A?A?CA??AAA?EAA?AAC?????AACAE??AEAC?@ABK?A@A@ABIBI??@E@E@E???ABG?CFQVeA"
             ]
@@ -14838,24 +14370,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "eohG{|`yRCBA@A?CBCBED??????A@A@C@ACA@EBCB?@GDA@CCEBWY?@KHi@o@ECCEAA????????CCAACC?AGGHKFF@@@B@??@JIDCBEBC??AACCgAoAA@GDEBCB[]A???KJy@}@NO@?BE@???@ABC@?CEBC@A@ABC??@A@?@A?ADC@A@ABART@@@?LN???AF???@ADCBCTAd@f@FHBC??JL??GHSSQNA@C@HJFFLLj@n@bAjALLDFDF"
             ]
@@ -16175,40 +15690,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "ol~Fa{yxRHMJMJMJMHD@@??D@BB@A@C@@A@A@B@@?BB@CBAAAAA@?@?@@@ABCAAA??A@?@@?@BC@AAAAA??@?@@@@?A@AAAAA@??A@@@@@A?AA?AA@A@@@@@C@AAAA??A@?????@@@?@A@CAA??AA@???@???@@@A@AAA??AA??@A@@??@@@A@AAA??AA???A@@@??@BC@A?A?G?E?E???AOUGK?AA?EICGAAGMA??AAA??KQ@A??@CBCFICCBCBE@A@C??JHLH??GHGHCCA?AAC@?@A@@@??@?A@??BDBDBB@B@B?@HL@B@@?@DD@A????BE??@?@A?ABCDGFGHF@A@AJHDBFFBB??@?B?B?@?@??A@?@A?A@?@@@@??@@@?@@BB????BBB@??B@@@??@BKLEDOTCB??IJQRCD??KLKLKLILA?ORIJCDGFILCBEDCDBBQROREC?ACAECIG?AAA??AAA?CCA??AAA??BCLQBCHKCA?AA?@A@A@A@CA??AECCCCAGE?AGE??AAAAAAAA",
                 "wo~FyfzxRZc@CIQOBEDG@?@C@A@C@A@A?????A@?@AJFVP^X@AB@?AFE@?LK?@@@??DB@??@@?d@ZGHOK?@A?ABA@??CBABFF??RN@?BBB@FD@@d@\\TN@@??@CBE??@A????@AJH@@??DBB@@@??@???@???H?@AB??@JFDBDDBA@?A?@?@?DA?@DAH?ZC@NA??B?@??DDFD??@???BB@@LJ??????@???@@@?GHGFBBB@BBJH@@??@?@@@??@@@@????@B@??@?@B??@?BBJF@@B?l@s@JHSTBB@@KLKLHFMLYSCAMKCCA?CCCCA?AAECOKACEACCAA??????ECIGAACCA?AACCCAA?AAA???CDGH??GHIJ??CDCCGEKPKIEAIGo@e@YSUOLQCCA?KIAAa@YMRSMA@c@Y?AEA?AAAA???AA??CDCCCAAA??AAEFIHYSBECC"
@@ -16684,22 +16166,6 @@
                 {
                     "name": "SAM",
                     "type": "ATM"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -18167,24 +17633,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "ydbGeq`yR??QG??GCQG?AA?GCCAA?@A???AEAJYD@DGGCFOFBDO??Xq@\\{@??Zu@A?@AD@FB@@THB@HBDB?ADBIT@@IPCAKVCAUj@[x@??a@dA"
             ]
@@ -19338,22 +18787,6 @@
                     "name": "7-ELEVEN",
                     "unit": "#B1-01",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -21137,22 +20570,6 @@
                     "name": "TransitLink Ticket Office",
                     "type": "ticket_office",
                     "description": "Operating Hours: Mondays to Sundays:  12.00pm to 3.45pm and 4.45pm to 7.30pm"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -22392,24 +21809,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "{dcGg}}xR?A???A??@??C??AA?AAAACAAAAIAGA@G?A??@???@M@C@G???C@C????H@D@@?D@@?HBb@F`@H?A@A@G@I@GRB@Gp@LADh@HCP???BABADv@LF@\\FD@@?B?F?t@LN@?@AB?BA@??AD?????BAB?@?@??AD???@???@??AB?@??ABEA???BA@?D??AD?@ADAB?B@@CHYGBM?C@E?A@E??_@GA?A?EA{@OADABAF?@?@CDCPUEBQ?C@C?A????@C?A??[E????ADADETi@IIC_C_@KA?AE@A@C?MDGB??A?A@??E@E@A@A?EAEA??u@MBMr@J@@D?@@??DC@?FC??BA??B???@ADA@???DA?A@?BA@?BA@AH@??B@?A??BK???C?A@C???A"
             ]
@@ -22699,22 +22099,6 @@
                     "name": "FAHEEMAS TRADING PTE LTD",
                     "unit": "#B1-02",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -22846,24 +22230,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "qmqGondyRB@??ABAB??DBD@@@@@@???BBD@DB??B@B@BGB@d@RvAn@`Ab@CFCDEHABGLAB??EHABCHaAc@}BeACA??BGAACA??EACCEAAA??A?AAECEAAACF??A?AAA?iBy@mAk@BGDI@C??BCBGBG@C??@CFM@ClAh@l@Xz@^@@??",
                 "stqGuqdyR\\P@??C??@AFE@@@?@?B@@@B?B@B@B@@?@@B@D@B@B@B@DBDBFB@?FBFDD@HDFBDBB@LFJDNHLD?@@???B@DBD@B@???@@???D@DB?@B@@?B@DB@@LDTJ??DBFBLFHDNFLFLFB@@@@?DBB@B@@@DBB@BBB@@@@@@?@@@@B@@@@@@@@@???F?B?@v@\\ABA?ADGL?@A@A@ABw@_@?@C@CBA?C?GACACAC?AAAAEAEAGCEACAGCCCMEOI[MUMUISKCA??AACA??EAECCAAAA???AA??EAECAAA?AAA?EC[O]O[MMGKGIECACACACAAACCCAAAEACCA?AAAAA?AA??AA@C?E?A??@A?AMEIEGCBE????@CBGBE@A?A??BE"
@@ -22929,24 +22296,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "}isGyafyR@??@????R??@K?DPD??BE?DTA?AEKB^vB??DGB??R??Lt@?BLl@????@F??@D??Lt@E@DVG?CKC?C@CO]CA?DVI@?EEAEYQAI_@A??A@A?CG@?C?ACGI@?C??CI?A??G]BGMs@E?G[DAAEA???@ACMBAc@aCGE?@A?AACC@CUKDK@@BGB?G[LCP?LCNCD?HCFA@D?@DRf@?@@D??NC??A???TE??@A??AA???C??@???X"
             ]
@@ -24277,24 +23627,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "mx}F}pzxRLU??JSR]DG@CFKHO@ABEBM?C@C?A@I@ABQBIAAAA?ACG??CE?A????AAAC???AAA?A??AA??AA?CCC?CCCC?????A?AAAA????AA?A?C???A@A?A?A@A@C@A@ABAB?@?@?@@@??@@@?@?B?@?@BH@@??BF?????@@@@@@D??@B??@@?@@@@GBG@G@G@?B@?@@?@@@???DBFDDGBEBGDGHF??@?BBD@???@@?@@B@??@@??B@??B@@@??CF??EF?@A@???@????EDAB???@A@?@??@@FD????@@JHJHLHA@A@A@ABDBFDDDFDEFGFEFEFMIMKKIIG??AA??CA????AAA?AAA?????A???ADAFAB?@A@ABAFAFCF??AB???BCFAFEJ@@@?BB@???@@B@JHJHJHJFABCBA@A@?@@???A?????????C@?@A@A@OIGC?AWMECAA??AAEACCCAA??A??CACAEC??GEEFc@v@ECECA???CA??CCCA??AA????A?AAAA"
             ]
@@ -25001,24 +24334,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "urnGi`cyRH@CJ??ADADCJ???@CHICA?CAKCaBa@{EiA?ABG?A@GDO??BK??|HlBJBB?@@",
                 "gsnGo`cyR}HmBzEhA?AbB`@AB",
@@ -25436,22 +24752,6 @@
                 {
                     "name": "Citibank",
                     "type": "ATM"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -26222,24 +25522,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "m|bGq_pxRNo@AAA?@??C@E@A?CDM@???D@@??@??B?B@??D@????JBD@??@?B@ENELA?CJVFA?FNCJIZKC???BA????DWI?@A@???@??ADAB??ADU|@@?d@LYdAFB??St@????s@Q??A?GC??C??????AEAC?AA??A???CAEA??A?BG@G@??A@?@CJa@BGFUTaAJ_@@G@ABI?A@E@C?A@E??@E@A"
             ]
@@ -27263,22 +26546,6 @@
                 {
                     "name": "DBS/POSB (Located near Passenger Service Centre at Downtown Line Stevens)",
                     "type": "ATM"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -27929,22 +27196,6 @@
                     "name": "绝味 King of Braise",
                     "unit": "#01-21",
                     "type": "shop"
-                },
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
                 }
             ],
             "boundaries": [
@@ -28059,24 +27310,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "y_hGmznyR\\?r@?B?D?DB?@??B@@B???@@J?B?J?L?????@?@?@?D?F?B?HB?F???B?@?@?B???@??@B?????@???F?D?F?F?D??A??@M@E?G@E?????A???E@E@M???C?C@A?G?C@C?An@??@^??L_@??D?@E?]??@?@A@?@?B?@?BAD?D???@A??@?B?FAB?@?B?@??AB?B?@???@X?N@???JJ?P??LO?M??F_@d@A???E??b@ADAn@SAG??VEpB?R???D?HC?E?A?E?C???A?A?E?E???CAA??HE?C?I?@u@H???@?@?B??M?K@g@@E@W?C?a@?C@M?W?A????G???A?EAA??P?HO??O?KBkA?G?C?I?A@A?C?C?A???M?A?G?E?A@AA????A?A?E?E?O??AACC????C?C?A?U?I?K??E]??M"
             ]
@@ -28172,24 +27406,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "m|eG}nkyRP????J??D?L@N?P?J??A?K?IP?R@?Cb@?`@@?KN??s@b@?F??\\?@?T?B?D????@????B?J?B?D?D?B?F???P?F?D?B?D?B?@AF?@A???I?A?K??Ke@AY?Y??A[??MZ??C??E?m@?E?[Ao@?c@?E@[AC????E?A?A???G?E???????A?K?E@??A?A????@IB?p@@L???"
             ]
@@ -28285,24 +27502,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "qzaGy_rxRDGDGDIBBDBB@DBDBGLA@ININGNDBDBKPKNKPKNKEECECIN?@e@|@Q\\ININa@v@MVEHCDIPGCCAIEAAKE?AEA??b@}@h@eA??@ALU@EFK@CBEBE??Zm@^u@BG@?HQDKFKBGBCBE??????@@B@@???HD?@HBDG"
             ]
@@ -29606,24 +28806,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "ooyF}xyxR@C??@C@A@E?A@EBC@C??@C@C@E@ADKHOFMBG@CBC?A@??A@C??@ABECACAAA??AA?AAAACOGOIDGDB??HBHD?A??R]RJ?@A?@???BA@A@C@A??BEBEB@??@?B@DIDI?AD@???@??D@??@????@B@B@MT@@@?DB@?IN@@LFNHSb@IP??ABA?ADA@???@ABA?ECGCECGCEHA@CFKRHBFDEFJDMVCB?@??CF??????EF??QIGEA?KTCDA@EDIPIPA@EA??ECEA?AA?????AACAAAGC??EAJSBGJUHO@C"
             ]
@@ -30702,24 +29885,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "wvbGkucyR_@mAK[IYCGUu@Oe@@ADA?AB?FC??DCBADA????????@A????@?BAFRTh@BA??FC?A?AGQEO??@?RIPf@IZAHCF??AD?@HTFP??Rf@\\|@??E@?@E@E@????C@????A@??E@E@?@??GBA?GQA???ID"
             ]
@@ -30839,24 +30005,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "uieGc`pyR?A@E?A?A@E?A@A?A?A??@??E@C?A@E??BK????jATB@D@NB@CXFXFLBNBHBNBJBH@ZHZFFCXMh@LNBlA@?J?JAL?B?@?D?F???@?DH@@@J@??D@?J?B?@???@???@?@???@??AF?@?B???D?D???F?B?HM?SAUEBM??@CBK????OCAA??KCA?GAKCi@K??AAAAA??????@??AF?@AB?@o@OKA?@Op@EL_@BWGAAA?EAF[A?TcA??A???qE_AC?CAKA"
             ],
@@ -32204,24 +31353,7 @@
                     "landmarks": []
                 }
             ],
-            "amenities": [
-                {
-                    "name": "Wide Faregates",
-                    "type": "facility"
-                },
-                {
-                    "name": "Tactile Flooring",
-                    "type": "facility"
-                },
-                {
-                    "name": "Communication System",
-                    "type": "facility"
-                },
-                {
-                    "name": "Passenger Information System",
-                    "type": "facility"
-                }
-            ],
+            "amenities": [],
             "boundaries": [
                 "wvdGqi~xRX??N??J@?A?MrA?H?Z@?R`A@?KfA@AHt@@?R??DFBBJ??B???@?D?D?D?D?@?@?@?B???@????I?g@??@AD?D?D?F???@?DE?I?GAALSC]CMA?CE??M?AD??A@E?A?AC??C?AY?Q?GAA?G???G?A?E?E???A?I?A???K?I?A?}AAM?A??C???C?C?????A?E?C?C?A?A?A?A?C?C@??C?E?E?I?I@Q"
             ]

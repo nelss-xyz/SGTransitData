@@ -372,7 +372,9 @@ function findOperatorData(ltaData, operatorData, stationCodes) {
             }
             if (entry.amenities && entry.amenities.length > 0) {
                 for (const am of entry.amenities) {
-                    if (am.name.startsWith('ATM: ')) {
+                    if (am.type === 'facility') {
+                        // Ignore facilities like wide faregates
+                    } else if (am.name.startsWith('ATM: ')) {
                         result.amenities.push({ name: am.name.substring(5), type: 'ATM' });
                     } else if (am.name.toLowerCase().startsWith('bicycle racks: ')) {
                         const val = am.name.split(':')[1].trim().toLowerCase();
