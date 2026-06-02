@@ -390,6 +390,9 @@ function findOperatorData(ltaData, operatorData, stationCodes) {
                         if (desc) obj.description = desc;
                         result.amenities.push(obj);
                     } else {
+                        if (am.name.toLowerCase().includes('clinic')) {
+                            am.type = 'clinic';
+                        }
                         result.amenities.push(am);
                     }
                 }

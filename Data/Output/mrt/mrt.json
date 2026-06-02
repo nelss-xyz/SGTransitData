@@ -526,7 +526,7 @@
                 {
                     "name": "ONECARE CLINIC ALJUNIED MRT",
                     "unit": "#01-03",
-                    "type": "shop"
+                    "type": "clinic"
                 }
             ],
             "boundaries": [
@@ -1796,7 +1796,7 @@
                 {
                     "name": "ONECARE CLINIC BEDOK MRT",
                     "unit": "#01-01",
-                    "type": "shop"
+                    "type": "clinic"
                 }
             ],
             "boundaries": [
@@ -4526,7 +4526,7 @@
                 {
                     "name": "DRS. KOO & CHOO MEDICAL CLINIC PTE LTD",
                     "unit": "#01-04A",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "KOI THE EXPRESS",
@@ -4833,7 +4833,7 @@
                 {
                     "name": "ONECARE CLINIC BUKIT GOMBAK MRT",
                     "unit": "#01-16",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "PIZZA HUT",
@@ -6854,7 +6854,7 @@
                 {
                     "name": "LIFE FAMILY CLINIC",
                     "unit": "#01-28/29",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "MA LA HOT POT",
@@ -9542,7 +9542,7 @@
                 {
                     "name": "EC FAMILY CLINIC",
                     "unit": "#01-17/18",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "FUJI BAKERY",
@@ -23346,7 +23346,7 @@
                 {
                     "name": "REDWOOD FAMILY CLINIC",
                     "unit": "#01-07",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "SELERA NASI PADANG",
@@ -24189,7 +24189,7 @@
                 {
                     "name": "GREENLIFE CLINIC & SURGERY / Q&M DENTAL SURGERY",
                     "unit": "#02-01",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "KAWAN STATION / WEN JIA BAO",
@@ -27165,7 +27165,7 @@
                 {
                     "name": "ONECARE CLINIC TAMPINES MRT",
                     "unit": "#01-27",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "POSB",
@@ -30629,7 +30629,7 @@
                 {
                     "name": "Advanced Dental Clinic",
                     "unit": "#B1-31",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "ALL BEST ENTERPRISE",
@@ -30674,7 +30674,7 @@
                 {
                     "name": "Fresenius Kidney Care Woodlands Clinic",
                     "unit": "#B1-03",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "FRUITBOX",
@@ -30764,7 +30764,7 @@
                 {
                     "name": "Northlink (Woodlands) Clinic",
                     "unit": "#B1-32",
-                    "type": "shop"
+                    "type": "clinic"
                 },
                 {
                     "name": "On'Lee Artisan Bakery",
