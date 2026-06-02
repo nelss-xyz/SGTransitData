@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { fetchOSMMRTData } = require('./fetchOSMMRTData');
 const { retrieveLTAMRTData } = require('./fetchLTAMRTData');
+const { fetchOperatorMRTData } = require('./fetchOperatorMRTData');
 const { parseLTASpatialData } = require('./parseLTASpatialData');
 var polyline = require('@mapbox/polyline');
 const { formStationLineRelations } = require('./MRT/getLine-StationRelationsLTA');
@@ -61,6 +62,7 @@ function getLineCodeForStationCode(code) {
     if (!testingMode) {
         await fetchOSMMRTData();
         await retrieveLTAMRTData();
+        await fetchOperatorMRTData();
         await parseLTASpatialData();
         await formStationLineRelations();
         await parseMRTData();
@@ -93,6 +95,10 @@ async function parseMRTData() {
 
     const osmData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/osm_mrt_data.json", "utf8"));
     const ltaMrtData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/lta_mrt_data.json", "utf8"));
+    let operatorMrtData = [];
+    try {
+        operatorMrtData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/operator_mrt_data.json", "utf8"));
+    } catch(e) { console.warn("[Parser] operator_mrt_data.json not found, proceeding without it."); }
     const ltaSpatialData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/lta_spatial_data.json", "utf8"));
     const lineRelationsData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/mrt_lines_station_relation_data.json", "utf8"));
 
@@ -114,12 +120,12 @@ async function parseMRTData() {
             nameTa = osmMatch.nameTa;
         }
 
-        // Find LTA scraped data for train times and landmarks
-        const relevantLTAData = findLTAData(ltaMrtData, ltaStation.codes);
+        // Find Operator scraped data (SMRT/SBST) for train times, exits, and amenities
+        const relevantOperatorData = findOperatorData(ltaMrtData, operatorMrtData, ltaStation.codes);
 
         // Map and merge exits
         const mergedExits = [];
-        const scrapedExits = relevantLTAData.exits || [];
+        const scrapedExits = relevantOperatorData.exits || [];
 
         // Add exits from spatial data
         for (const spatialExit of ltaStation.exits) {
@@ -161,7 +167,7 @@ async function parseMRTData() {
         if (stationLat && stationLon) {
             const nearbyOsmEntrances = osmEntrances.filter(e => haversineDistance(e.lat, e.lon, stationLat, stationLon) < 400);
             for (const osmExit of nearbyOsmEntrances) {
-                const exitName = osmExit.name.length === 1 ? `Exit ${osmExit.name}` : osmExit.name;
+                const exitName = osmExit.name.length <= 3 ? `Exit ${osmExit.name}` : osmExit.name;
                 if (!mergedExits.some(e => e.exitName.toLowerCase() === exitName.toLowerCase())) {
                     mergedExits.push({
                         exitName: exitName,
@@ -172,7 +178,25 @@ async function parseMRTData() {
             }
         }
 
-        mergedExits.sort((a, b) => a.exitName.localeCompare(b.exitName, undefined, { numeric: true }));
+        // Clean, standardise, and filter exit names
+        for (const e of mergedExits) {
+            let name = e.exitName.trim();
+            if (/^[A-Za-z0-9]{1,3}$/.test(name) || /^[A-Za-z0-9]+\/[A-Za-z0-9]+$/.test(name)) {
+                name = "Exit " + name;
+            }
+            if (name.toLowerCase().startsWith('lrt exit ')) {
+                name = name.substring(4).trim();
+            }
+            if (name.toLowerCase().startsWith('exit ')) {
+                name = "Exit " + name.substring(5).trim();
+            }
+            e.exitName = name;
+        }
+
+        // Only keep exits that start with "Exit "
+        const finalExits = mergedExits.filter(e => e.exitName.toLowerCase().startsWith('exit '));
+
+        finalExits.sort((a, b) => a.exitName.localeCompare(b.exitName, undefined, { numeric: true }));
 
         // Encode boundaries
         const boundaries = ltaStation.boundaries.map(poly => polyline.encode(poly));
@@ -182,10 +206,11 @@ async function parseMRTData() {
             "name-chinese": ltaStation.nameZh,
             "name-tamil": nameTa,
             codes: ltaStation.codes.sort(),
-            latitude: ltaStation.latitude || (osmMatch ? osmMatch.lat : 0),
-            longitude: ltaStation.longitude || (osmMatch ? osmMatch.lon : 0),
-            trainFirstLastData: relevantLTAData.trainFirstLastData || [],
-            exits: mergedExits,
+            latitude: stationLat,
+            longitude: stationLon,
+            trainFirstLastData: relevantOperatorData.trainFirstLastData || [],
+            exits: finalExits,
+            amenities: relevantOperatorData.amenities || [],
             boundaries: boundaries
         };
 
@@ -324,20 +349,73 @@ function buildLines(osmRoutes, lineRelationsData) {
 // ─── LTA Data Lookup ─────────────────────────────────────────────────────────
 
 /**
- * Finds LTA station data (exit landmarks + first/last train) matching the given codes.
+ * Finds Operator station data (exits, landmarks, train times, amenities) matching the codes.
+ * Falls back to LTA data if not found.
  */
-function findLTAData(ltaData, stationCodes) {
+function findOperatorData(ltaData, operatorData, stationCodes) {
     const sortedCodes = [...stationCodes].sort();
     const result = {
         trainFirstLastData: [],
-        exits: []
+        exits: [],
+        amenities: []
     };
 
+    let hasOperatorExits = false;
+
+    // 1. Get Exits and Amenities from Operator Data
+    for (const entry of operatorData) {
+        const hasCodeMatch = stationCodes.some(c => entry.codes.includes(c));
+        if (hasCodeMatch) {
+            if (entry.exits && entry.exits.length > 0) {
+                result.exits.push(...entry.exits);
+                hasOperatorExits = true;
+            }
+            if (entry.amenities && entry.amenities.length > 0) {
+                for (const am of entry.amenities) {
+                    if (am.name.startsWith('ATM: ')) {
+                        result.amenities.push({ name: am.name.substring(5), type: 'ATM' });
+                    } else if (am.name.toLowerCase().startsWith('bicycle racks: ')) {
+                        const val = am.name.split(':')[1].trim().toLowerCase();
+                        if (val === 'yes' || val === 'true') {
+                            result.amenities.push({ name: 'Bicycle Racks', type: 'Bicycle Racks' });
+                        }
+                    } else if (am.name.toLowerCase().startsWith('bicycle: ')) {
+                        // Ignore
+                    } else if (am.name.startsWith('TransitLink Ticket Office')) {
+                        const match = am.name.match(/^TransitLink Ticket Office(?:\s*:\s*(.*))?$/i);
+                        const desc = match && match[1] ? match[1].trim() : '';
+                        const obj = { name: 'TransitLink Ticket Office', type: 'ticket_office' };
+                        if (desc) obj.description = desc;
+                        result.amenities.push(obj);
+                    } else {
+                        result.amenities.push(am);
+                    }
+                }
+            }
+        }
+    }
+
+    // Deduplicate exits from operator data
+    const uniqueExitsMap = new Map();
+    for (const exit of result.exits) {
+        let normName = exit.exit.toLowerCase();
+        if(normName.startsWith('exit ')) normName = normName.replace('exit ', '');
+        
+        if (!uniqueExitsMap.has(normName)) {
+            uniqueExitsMap.set(normName, exit);
+        } else {
+            const existing = uniqueExitsMap.get(normName);
+            existing.landmarks = [...new Set([...existing.landmarks, ...(exit.landmarks || [])])];
+        }
+    }
+    result.exits = Array.from(uniqueExitsMap.values());
+
+    // 2. Get Train Timings from LTA Data (and fallback for exits)
     for (const entry of ltaData) {
         const ltaCodes = entry.id.split('-').sort();
         if (sortedCodes.join('-') === ltaCodes.join('-') || stationCodes.some(c => c === entry.id)) {
             result.trainFirstLastData = entry.directions || [];
-            result.exits = entry.exits || [];
+            if (!hasOperatorExits) result.exits = entry.exits || [];
             break;
         }
     }
