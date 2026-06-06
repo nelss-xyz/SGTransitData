@@ -9,7 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "data": "node index.js",
-    "mrt": "node Scripts/MRTDataParser.js"
+    "mrt": "node Scripts/MRTDataParser.js",
+    "bus": "node Scripts/Bus/BusDataScraper/BusDataParser.js"
   },
   "dependencies": {
     "@mapbox/polyline": "^1.2.1",
@@ -18,7 +19,8 @@
     "dotenv": "^17.4.2",
     "proj4": "^2.20.8",
     "shapefile": "^0.6.6",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "dbffile": "^1.12.0"
