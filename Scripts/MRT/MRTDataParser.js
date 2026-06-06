@@ -1,10 +1,10 @@
 const fs = require("fs");
-const { fetchOSMMRTData } = require('./MRT/fetchOSMMRTData');
-const { retrieveLTAMRTData } = require('./MRT/fetchLTAMRTData');
-const { fetchOperatorMRTData } = require('./MRT/fetchOperatorMRTData');
-const { parseLTASpatialData } = require('./MRT/parseLTASpatialData');
+const { fetchOSMMRTData } = require('./fetchOSMMRTData');
+const { retrieveLTAMRTData } = require('./fetchLTAMRTData');
+const { fetchOperatorMRTData } = require('./fetchOperatorMRTData');
+const { parseLTASpatialData } = require('./parseLTASpatialData');
 var polyline = require('@mapbox/polyline');
-const { formStationLineRelations } = require('./MRT/getLine-StationRelationsLTA');
+const { formStationLineRelations } = require('./getLine-StationRelationsLTA');
 require('dotenv').config();
 
 const testingMode = process.env.TESTING_MODE;
