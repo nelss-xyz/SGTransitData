@@ -1,8 +1,8 @@
 const fs = require("fs");
-const { fetchOSMMRTData } = require('./fetchOSMMRTData');
-const { retrieveLTAMRTData } = require('./fetchLTAMRTData');
-const { fetchOperatorMRTData } = require('./fetchOperatorMRTData');
-const { parseLTASpatialData } = require('./parseLTASpatialData');
+const { fetchOSMMRTData } = require('./MRT/fetchOSMMRTData');
+const { retrieveLTAMRTData } = require('./MRT/fetchLTAMRTData');
+const { fetchOperatorMRTData } = require('./MRT/fetchOperatorMRTData');
+const { parseLTASpatialData } = require('./MRT/parseLTASpatialData');
 var polyline = require('@mapbox/polyline');
 const { formStationLineRelations } = require('./MRT/getLine-StationRelationsLTA');
 require('dotenv').config();
@@ -392,7 +392,7 @@ function findOperatorData(ltaData, operatorData, stationCodes) {
                     } else {
                         const nameLower = am.name.toLowerCase();
                         const foodKeywords = ["cafe", "bakery", "restaurant", "food", "macdonald", "burger", "salad", "eat", "donut", "coffee", "bean", "tea", "juice", "cake", "pastry", "pastries"];
-                        
+
                         if (nameLower.includes('clinic') || nameLower.includes('medical') || nameLower.includes('dental')) {
                             am.type = 'clinic';
                         } else if (foodKeywords.some(kw => nameLower.includes(kw))) {
@@ -405,35 +405,35 @@ function findOperatorData(ltaData, operatorData, stationCodes) {
         }
     }
 
-        // Deduplicate exits from operator data
-        const uniqueExitsMap = new Map();
-        for (const exit of result.exits) {
-            let normName = exit.exit.toLowerCase();
-            if (normName.startsWith('exit ')) normName = normName.replace('exit ', '');
+    // Deduplicate exits from operator data
+    const uniqueExitsMap = new Map();
+    for (const exit of result.exits) {
+        let normName = exit.exit.toLowerCase();
+        if (normName.startsWith('exit ')) normName = normName.replace('exit ', '');
 
-            if (!uniqueExitsMap.has(normName)) {
-                uniqueExitsMap.set(normName, exit);
-            } else {
-                const existing = uniqueExitsMap.get(normName);
-                existing.landmarks = [...new Set([...existing.landmarks, ...(exit.landmarks || [])])];
-            }
+        if (!uniqueExitsMap.has(normName)) {
+            uniqueExitsMap.set(normName, exit);
+        } else {
+            const existing = uniqueExitsMap.get(normName);
+            existing.landmarks = [...new Set([...existing.landmarks, ...(exit.landmarks || [])])];
         }
-        result.exits = Array.from(uniqueExitsMap.values());
+    }
+    result.exits = Array.from(uniqueExitsMap.values());
 
-        // 2. Get Train Timings from LTA Data (and fallback for exits)
-        for (const entry of ltaData) {
-            const ltaCodes = entry.id.split('-').sort();
-            if (sortedCodes.join('-') === ltaCodes.join('-') || stationCodes.some(c => c === entry.id)) {
-                result.trainFirstLastData = entry.directions || [];
-                if (!hasOperatorExits) result.exits = entry.exits || [];
-                break;
-            }
+    // 2. Get Train Timings from LTA Data (and fallback for exits)
+    for (const entry of ltaData) {
+        const ltaCodes = entry.id.split('-').sort();
+        if (sortedCodes.join('-') === ltaCodes.join('-') || stationCodes.some(c => c === entry.id)) {
+            result.trainFirstLastData = entry.directions || [];
+            if (!hasOperatorExits) result.exits = entry.exits || [];
+            break;
         }
-
-        return result;
     }
 
+    return result;
+}
 
-    module.exports = {
-        parseMRTData
-    };
+
+module.exports = {
+    parseMRTData
+};
