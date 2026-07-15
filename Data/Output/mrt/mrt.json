@@ -5840,8 +5840,8 @@
             "codes": [
                 "CC31"
             ],
-            "latitude": 0,
-            "longitude": 0,
+            "latitude": 1.273115,
+            "longitude": 103.837028,
             "trainFirstLastData": [
                 {
                     "towards": "Bayfront",
@@ -14040,8 +14040,8 @@
             "codes": [
                 "CC30"
             ],
-            "latitude": 0,
-            "longitude": 0,
+            "latitude": 1.27043,
+            "longitude": 103.830693,
             "trainFirstLastData": [
                 {
                     "towards": "Bayfront",
@@ -21937,8 +21937,8 @@
             "codes": [
                 "CC32"
             ],
-            "latitude": 0,
-            "longitude": 0,
+            "latitude": 1.273316,
+            "longitude": 103.847408,
             "trainFirstLastData": [
                 {
                     "towards": "Bayfront",
