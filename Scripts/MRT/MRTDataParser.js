@@ -3,6 +3,7 @@ const { fetchOSMMRTData } = require('./fetchOSMMRTData');
 const { retrieveLTAMRTData } = require('./fetchLTAMRTData');
 const { fetchOperatorMRTData } = require('./fetchOperatorMRTData');
 const { fetchCitymapperMRTData } = require('./fetchCitymapperMRTData');
+const { fetchSgrailMRTData } = require('./fetchSgrailMRTData');
 const { parseLTASpatialData } = require('./parseLTASpatialData');
 var polyline = require('@mapbox/polyline');
 const { formStationLineRelations } = require('./getLine-StationRelationsLTA');
@@ -65,6 +66,7 @@ function getLineCodeForStationCode(code) {
         await retrieveLTAMRTData();
         await fetchOperatorMRTData();
         await fetchCitymapperMRTData();
+        await fetchSgrailMRTData();
         await parseLTASpatialData();
         await formStationLineRelations();
         await parseMRTData();
@@ -92,94 +94,6 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-/**
- * Query OSM for station coordinates by name.
- * Tries Overpass API first (broader search), then Nominatim geocoder as fallback.
- * Returns a map of lowercase station name → { lat, lon }.
- */
-async function fetchOSMCoordinatesForStations(stationNames) {
-    const results = {};
-    if (stationNames.length === 0) return results;
-
-    const userAgent = `SGTransitDataScript ${process.env.CONTACT_EMAIL || 'unknown'}`;
-
-    // 1. Try Overpass API — broad search across railway + public_transport tags
-    const namePattern = stationNames.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-    const query = `
-[out:json][timeout:30];
-area["ISO3166-1"="SG"]["admin_level"="2"]->.sg;
-(
-  node(area.sg)["railway"]["name"~"^(${namePattern})$",i];
-  way(area.sg)["railway"]["name"~"^(${namePattern})$",i];
-  node(area.sg)["public_transport"="station"]["name"~"^(${namePattern})$",i];
-  way(area.sg)["public_transport"="station"]["name"~"^(${namePattern})$",i];
-);
-out center;
-`;
-
-    try {
-        console.log(`[Parser] Querying OSM Overpass for ${stationNames.length} missing station coordinate(s)...`);
-        const response = await fetch('https://overpass-api.de/api/interpreter', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json',
-                'User-Agent': userAgent
-            },
-            body: `data=${encodeURIComponent(query)}`
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            for (const el of data.elements) {
-                const name = el.tags && el.tags.name;
-                if (!name) continue;
-                const lat = el.lat || (el.center && el.center.lat);
-                const lon = el.lon || (el.center && el.center.lon);
-                if (lat && lon) {
-                    results[name.toLowerCase()] = { lat, lon };
-                    console.log(`[Parser] OSM Overpass coordinates for "${name}": ${lat}, ${lon}`);
-                }
-            }
-        } else {
-            console.warn(`[Parser] Overpass API returned ${response.status}, trying Nominatim fallback`);
-        }
-    } catch (err) {
-        console.warn(`[Parser] OSM Overpass query failed: ${err.message}, trying Nominatim fallback`);
-    }
-
-    // 2. Nominatim fallback for stations not found via Overpass
-    const stillMissing = stationNames.filter(n => !results[n.toLowerCase()]);
-    if (stillMissing.length > 0) {
-        console.log(`[Parser] Trying Nominatim geocoder for ${stillMissing.length} station(s)...`);
-        for (const name of stillMissing) {
-            try {
-                const searchQuery = `${name} MRT Station, Singapore`;
-                const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1&countrycodes=sg`;
-                const res = await fetch(url, { headers: { 'User-Agent': userAgent } });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.length > 0) {
-                        const lat = parseFloat(data[0].lat);
-                        const lon = parseFloat(data[0].lon);
-                        if (lat && lon && lat > 1.1 && lat < 1.5 && lon > 103.5 && lon < 104.1) {
-                            results[name.toLowerCase()] = { lat, lon };
-                            console.log(`[Parser] Nominatim coordinates for "${name}": ${lat}, ${lon}`);
-                        }
-                    }
-                }
-                // Respect Nominatim rate limit (1 req/sec)
-                await new Promise(r => setTimeout(r, 1100));
-            } catch (err) {
-                console.warn(`[Parser] Nominatim lookup failed for "${name}": ${err.message}`);
-            }
-        }
-    }
-
-    return results;
-}
-
-
 async function parseMRTData() {
     console.log('\n[Parser] Loading data files...');
 
@@ -194,6 +108,11 @@ async function parseMRTData() {
     try {
         citymapperMrtData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/citymapper_mrt_data.json", "utf8"));
     } catch (e) { console.warn("[Parser] citymapper_mrt_data.json not found, proceeding without it."); }
+
+    let sgraildataMrtData = {};
+    try {
+        sgraildataMrtData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/sgraildata_mrt_data.json", "utf8"));
+    } catch (e) { console.warn("[Parser] sgraildata_mrt_data.json not found, proceeding without it."); }
 
     const ltaSpatialData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/lta_spatial_data.json", "utf8"));
     const lineRelationsData = JSON.parse(fs.readFileSync("./Data/Raw/mrt/mrt_lines_station_relation_data.json", "utf8"));
@@ -369,10 +288,6 @@ async function parseMRTData() {
     if (missingStations.length > 0) {
         console.log(`[Parser] Reconciling ${missingStations.length} station(s) missing from spatial data: ${missingStations.map(s => s.name).join(', ')}`);
 
-        // Query OSM Overpass API for coordinates of missing stations
-        const missingNames = missingStations.map(s => s.name);
-        const osmCoords = await fetchOSMCoordinatesForStations(missingNames);
-
         for (const missing of missingStations) {
             // Look up LTA data for train timings and exits
             const relevantOperatorData = findOperatorData(ltaMrtData, operatorMrtData, missing.codes);
@@ -388,18 +303,14 @@ async function parseMRTData() {
                 nameTa = osmMatch.nameTa;
             }
 
-            // Use coordinates from Citymapper, then OSM Overpass query, then cached OSM data, then 0
+            // Use coordinates from Citymapper, then cached OSM data, then 0
             let lat = 0, lon = 0;
             const citymapperCoord = citymapperMrtData[missing.name.toLowerCase()];
-            const osmCoord = osmCoords[missing.name.toLowerCase()];
             
             if (citymapperCoord) {
                 lat = citymapperCoord.lat;
                 lon = citymapperCoord.lon;
                 console.log(`[Parser] Used Citymapper coordinates for "${missing.name}": ${lat}, ${lon}`);
-            } else if (osmCoord) {
-                lat = osmCoord.lat;
-                lon = osmCoord.lon;
             } else if (osmMatch && osmMatch.lat && osmMatch.lon) {
                 lat = osmMatch.lat;
                 lon = osmMatch.lon;
@@ -407,6 +318,11 @@ async function parseMRTData() {
 
             if (!lat || !lon) {
                 console.warn(`[Parser] ⚠ No coordinates found for "${missing.name}" — will default to 0,0`);
+            }
+            
+            let bounds = sgraildataMrtData[missing.name.toLowerCase()] || [];
+            if (bounds.length > 0) {
+                console.log(`[Parser] Used sgraildata boundaries for "${missing.name}"`);
             }
 
             const fallbackStation = {
@@ -419,7 +335,7 @@ async function parseMRTData() {
                 trainFirstLastData: relevantOperatorData.trainFirstLastData || [],
                 exits: [],
                 amenities: relevantOperatorData.amenities || [],
-                boundaries: []
+                boundaries: bounds
             };
 
             // Process exits from LTA/operator data (simplified — no spatial exit merging)
