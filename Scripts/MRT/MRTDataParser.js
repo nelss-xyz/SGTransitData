@@ -231,7 +231,118 @@ async function parseMRTData() {
 
     console.log(`[Parser] Built ${outputLines.length} line objects`);
 
-    // ── Step 7: Write output ────────────────────────────────────────────────
+    // ── Step 7: Reconcile — create fallback stations for any missing from lines ─
+    const existingCodes = new Set(outputStations.flatMap(s => s.codes));
+
+    // First pass: merge new codes into existing stations that share the same name
+    for (const line of outputLines) {
+        for (const lineStn of line.stations) {
+            if (!existingCodes.has(lineStn.code)) {
+                const existingStation = outputStations.find(s => s.name.toLowerCase() === lineStn.name.toLowerCase());
+                if (existingStation) {
+                    existingStation.codes.push(lineStn.code);
+                    existingStation.codes.sort();
+                    existingCodes.add(lineStn.code);
+                    console.log(`[Parser] Merged new code ${lineStn.code} into existing station "${existingStation.name}"`);
+                }
+            }
+        }
+    }
+
+    // Second pass: group truly missing stations by name (to merge interchange codes)
+    const missingByName = {};
+    for (const line of outputLines) {
+        for (const lineStn of line.stations) {
+            if (!existingCodes.has(lineStn.code)) {
+                if (!missingByName[lineStn.name]) {
+                    missingByName[lineStn.name] = {
+                        name: lineStn.name,
+                        codes: [],
+                        latitude: lineStn.latitude || 0,
+                        longitude: lineStn.longitude || 0,
+                    };
+                }
+                if (!missingByName[lineStn.name].codes.includes(lineStn.code)) {
+                    missingByName[lineStn.name].codes.push(lineStn.code);
+                }
+                // Use non-zero coordinates if available
+                if (lineStn.latitude && lineStn.longitude) {
+                    missingByName[lineStn.name].latitude = lineStn.latitude;
+                    missingByName[lineStn.name].longitude = lineStn.longitude;
+                }
+            }
+        }
+    }
+
+    const missingStations = Object.values(missingByName);
+    if (missingStations.length > 0) {
+        console.log(`[Parser] Reconciling ${missingStations.length} station(s) missing from spatial data: ${missingStations.map(s => s.name).join(', ')}`);
+
+        for (const missing of missingStations) {
+            // Look up LTA data for train timings and exits
+            const relevantOperatorData = findOperatorData(ltaMrtData, operatorMrtData, missing.codes);
+
+            // Try to find Tamil name from OSM
+            let nameTa = '';
+            const osmMatch = osmStations.find(s => {
+                const refMatch = s.ref && s.ref.split(';').map(r => r.trim()).some(r => missing.codes.includes(r));
+                const exactNameMatch = s.name && s.name.toLowerCase() === missing.name.toLowerCase();
+                return refMatch || exactNameMatch;
+            });
+            if (osmMatch && osmMatch.nameTa) {
+                nameTa = osmMatch.nameTa;
+            }
+
+            // If no coordinates from XML, try OSM
+            let lat = missing.latitude;
+            let lon = missing.longitude;
+            if ((!lat || !lon) && osmMatch) {
+                lat = osmMatch.lat || 0;
+                lon = osmMatch.lon || 0;
+            }
+
+            const fallbackStation = {
+                name: missing.name,
+                "name-chinese": '',
+                "name-tamil": nameTa,
+                codes: missing.codes.sort(),
+                latitude: lat,
+                longitude: lon,
+                trainFirstLastData: relevantOperatorData.trainFirstLastData || [],
+                exits: [],
+                amenities: relevantOperatorData.amenities || [],
+                boundaries: []
+            };
+
+            // Process exits from LTA/operator data (simplified — no spatial exit merging)
+            const scrapedExits = relevantOperatorData.exits || [];
+            for (const e of scrapedExits) {
+                let exitName = e.exit.trim();
+                if (/^[A-Za-z0-9]{1,3}$/.test(exitName) || /^[A-Za-z0-9]+\/[A-Za-z0-9]+$/.test(exitName)) {
+                    exitName = "Exit " + exitName;
+                }
+                if (exitName.toLowerCase().startsWith('exit ')) {
+                    exitName = "Exit " + exitName.substring(5).trim();
+                }
+                if (exitName.toLowerCase().startsWith('exit ')) {
+                    fallbackStation.exits.push({
+                        exitName: exitName,
+                        coordinates: [],
+                        landmarks: e.landmarks || []
+                    });
+                }
+            }
+            fallbackStation.exits.sort((a, b) => a.exitName.localeCompare(b.exitName, undefined, { numeric: true }));
+
+            outputStations.push(fallbackStation);
+        }
+
+        // Re-sort after adding new stations
+        outputStations.sort((a, b) => a.name.localeCompare(b.name));
+        console.log(`[Parser] Station count after reconciliation: ${outputStations.length}`);
+    }
+
+    // ── Step 8: Write output ────────────────────────────────────────────────
     const mrtData = {
         stations: outputStations,
         lines: outputLines,

@@ -75,6 +75,16 @@ async function formStationLineRelations() {
             // Split Interchange codes (e.g., "NS24-NE6-CC1" -> ["NS24", "NE6", "CC1"])
             const individualCodes = rawCode.split('-');
 
+            // Parse coordinates if available (format: "lat,lon" or empty)
+            let lat = 0, lon = 0;
+            if (rawCoords) {
+                const parts = rawCoords.split(',').map(Number);
+                if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                    lat = parts[0];
+                    lon = parts[1];
+                }
+            }
+
             individualCodes.forEach(code => {
                 const parentLines = getParentLines(code);
 
@@ -84,6 +94,8 @@ async function formStationLineRelations() {
                         linesMap[parentLine].stations.push({
                             code: code,
                             name: rawName,
+                            latitude: lat,
+                            longitude: lon,
                         });
                     }
                 });

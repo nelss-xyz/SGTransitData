@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "data": "node index.js",
-    "mrt": "node Scripts/MRTDataParser.js",
+    "mrt": "node Scripts/MRT/MRTDataParser.js",
     "bus": "node Scripts/Bus/BusDataScraper/BusDataParser.js"
   },
   "dependencies": {
