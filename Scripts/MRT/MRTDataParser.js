@@ -324,6 +324,9 @@ async function parseMRTData() {
             if (bounds.length > 0) {
                 console.log(`[Parser] Used sgraildata boundaries for "${missing.name}"`);
             }
+            
+            // Encode boundaries using polyline
+            const encodedBoundaries = bounds.map(poly => polyline.encode(poly));
 
             const fallbackStation = {
                 name: missing.name,
@@ -335,7 +338,7 @@ async function parseMRTData() {
                 trainFirstLastData: relevantOperatorData.trainFirstLastData || [],
                 exits: [],
                 amenities: relevantOperatorData.amenities || [],
-                boundaries: bounds
+                boundaries: encodedBoundaries
             };
 
             // Process exits from LTA/operator data (simplified — no spatial exit merging)

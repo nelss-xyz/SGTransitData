@@ -17,8 +17,20 @@ async function fetchSgrailMRTData() {
         for (const feature of data.features) {
             if (feature.properties && feature.properties.NAME) {
                 const name = feature.properties.NAME.toLowerCase();
-                if (feature.geometry && (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon')) {
-                    boundaries[name] = feature.geometry.coordinates;
+                let polygons = [];
+                if (feature.geometry && feature.geometry.type === 'Polygon') {
+                    polygons = [feature.geometry.coordinates];
+                } else if (feature.geometry && feature.geometry.type === 'MultiPolygon') {
+                    polygons = feature.geometry.coordinates;
+                }
+
+                if (polygons.length > 0) {
+                    boundaries[name] = [];
+                    for (const poly of polygons) {
+                        // Extract exterior ring (first element) and flip to [lat, lon]
+                        const extRing = poly[0].map(coord => [coord[1], coord[0]]);
+                        boundaries[name].push(extRing);
+                    }
                 }
             }
         }
