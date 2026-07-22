@@ -239,7 +239,7 @@ async function parseBusData() {
         if (routes.length === 0) continue;
 
         const name = buildServiceName(svcNo, dirs, stopNameMap);
-        const type = dirs[0].Category;
+        const type = mapBusType(dirs[0].Category);
         servicesOutput[svcNo] = { name, type, routes };
     }
 
@@ -268,7 +268,7 @@ async function parseBusData() {
 
         servicesOutput[key] = {
             name,
-            type: info.category,
+            type: mapBusType(info.category),
             routes
         };
 
@@ -371,6 +371,31 @@ function buildSpecialServiceName(svcNo, directions) {
 }
 
 /**
+ * Map raw category string from DataMall/LTA into user-friendly bus type string.
+ */
+function mapBusType(category) {
+    if (!category) return 'Public Bus';
+    const catUpper = category.trim().toUpperCase();
+    switch (catUpper) {
+        case 'TRUNK':
+        case 'FEEDER':
+        case 'EXPRESS':
+        case 'INDUSTRIAL':
+        case 'CITY_LINK':
+        case 'CITY-LINK':
+            return 'Public Bus';
+        case 'PREMIUM':
+            return 'Premium Bus (Private)';
+        case 'SHUTTLEATTRACTIONS':
+            return 'Shuttle to attractions';
+        case 'SHUTTLEHOSPITALS':
+            return 'Shuttle to hospitals';
+        default:
+            return category;
+    }
+}
+
+/**
  * Sort service numbers naturally:
  * Numeric services first (2, 7, 10, 65, 107...),
  * then alphanumeric (2e, 12e, 145A...),
@@ -385,4 +410,4 @@ function sortServiceNumbers(a, b) {
     return a.localeCompare(b);
 }
 
-module.exports = { parseBusData };
+module.exports = { parseBusData, mapBusType };
