@@ -1,1 +1,1 @@
-[{"serviceNo":"925M","direction":1,"WD":{"First":"-","Last":"-"},"SAT":{"First":"-","Last":"-"},"SUN / PH":{"First":"0703","Last":"1953"}},{"serviceNo":"925","direction":2,"WD":{"First":"0615","Last":"2034"},"SAT":{"First":"0615","Last":"2034"},"SUN / PH":{"First":"-","Last":"-"}}]
+[{"serviceNo":"925","direction":1,"WD":{"First":"0615","Last":"2034"},"SAT":{"First":"0615","Last":"2034"},"SUN / PH":{"First":"-","Last":"-"}},{"serviceNo":"925M","direction":1,"WD":{"First":"-","Last":"-"},"SAT":{"First":"-","Last":"-"},"SUN / PH":{"First":"0703","Last":"1953"}}]

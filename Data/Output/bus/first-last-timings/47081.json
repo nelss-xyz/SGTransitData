@@ -1,1 +1,1 @@
-[{"serviceNo":"856B","direction":1,"WD":{"First":"0657","Last":"0902"},"SAT":{"First":"-","Last":"-"},"SUN / PH":{"First":"-","Last":"-"}},{"serviceNo":"856","direction":2,"WD":{"First":"0541","Last":"0019"},"SAT":{"First":"0552","Last":"0021"},"SUN / PH":{"First":"0600","Last":"0020"}}]
+[{"serviceNo":"856","direction":1,"WD":{"First":"0541","Last":"0019"},"SAT":{"First":"0552","Last":"0021"},"SUN / PH":{"First":"0600","Last":"0020"}},{"serviceNo":"856B","direction":1,"WD":{"First":"0657","Last":"0902"},"SAT":{"First":"-","Last":"-"},"SUN / PH":{"First":"-","Last":"-"}}]

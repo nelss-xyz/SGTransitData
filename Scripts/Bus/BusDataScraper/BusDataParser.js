@@ -324,18 +324,22 @@ async function parseBusData() {
 
     console.log('[Parser] Building first & last bus timings by stop...');
     const firstLastTimingsOutput = {};
+    const timingsByStopAndService = {};
 
     for (const r of dmRoutesRaw) {
         const stopCode = r.BusStopCode;
         if (!stopCode) continue;
 
-        if (!firstLastTimingsOutput[stopCode]) {
-            firstLastTimingsOutput[stopCode] = [];
+        if (!timingsByStopAndService[stopCode]) {
+            timingsByStopAndService[stopCode] = {};
+        }
+        if (!timingsByStopAndService[stopCode][r.ServiceNo]) {
+            timingsByStopAndService[stopCode][r.ServiceNo] = [];
         }
 
-        firstLastTimingsOutput[stopCode].push({
-            serviceNo: r.ServiceNo,
-            direction: r.Direction,
+        timingsByStopAndService[stopCode][r.ServiceNo].push({
+            rawDir: r.Direction,
+            seq: r.StopSequence,
             WD: {
                 First: r.WD_FirstBus || '-',
                 Last: r.WD_LastBus || '-',
@@ -351,10 +355,24 @@ async function parseBusData() {
         });
     }
 
-    for (const stopCode of Object.keys(firstLastTimingsOutput)) {
-        firstLastTimingsOutput[stopCode].sort(
-            (a, b) => sortServiceNumbers(a.serviceNo, b.serviceNo) || (a.direction - b.direction)
-        );
+    for (const [stopCode, serviceMap] of Object.entries(timingsByStopAndService)) {
+        firstLastTimingsOutput[stopCode] = [];
+        const sortedServices = Object.keys(serviceMap).sort(sortServiceNumbers);
+
+        for (const svcNo of sortedServices) {
+            const items = serviceMap[svcNo];
+            items.sort((a, b) => (a.rawDir - b.rawDir) || (a.seq - b.seq));
+
+            items.forEach((item, index) => {
+                firstLastTimingsOutput[stopCode].push({
+                    serviceNo: svcNo,
+                    direction: index + 1,
+                    WD: item.WD,
+                    SAT: item.SAT,
+                    'SUN / PH': item['SUN / PH'],
+                });
+            });
+        }
     }
 
     // ── 8. Write output ───────────────────────────────────────────────────────
