@@ -59,6 +59,8 @@ const RAW = {
 const OUT = {
     stops: path.join(OUTPUT_DIR, 'stops.json'),
     services: path.join(OUTPUT_DIR, 'services.json'),
+    firstLastTimings: path.join(OUTPUT_DIR, 'first_last_timings.json'),
+    firstLastTimingsDir: path.join(OUTPUT_DIR, 'first-last-timings'),
 };
 
 // ─── Entry Point ──────────────────────────────────────────────────────────────
@@ -318,16 +320,64 @@ async function parseBusData() {
 
     console.log(`  Built ${stopsOutput.length} stops`);
 
-    // ── 7. Write output ───────────────────────────────────────────────────────
+    // ── 7. Build first and last timings by stop ─────────────────────────────
+
+    console.log('[Parser] Building first & last bus timings by stop...');
+    const firstLastTimingsOutput = {};
+
+    for (const r of dmRoutesRaw) {
+        const stopCode = r.BusStopCode;
+        if (!stopCode) continue;
+
+        if (!firstLastTimingsOutput[stopCode]) {
+            firstLastTimingsOutput[stopCode] = [];
+        }
+
+        firstLastTimingsOutput[stopCode].push({
+            serviceNo: r.ServiceNo,
+            direction: r.Direction,
+            WD: {
+                First: r.WD_FirstBus || '-',
+                Last: r.WD_LastBus || '-',
+            },
+            SAT: {
+                First: r.SAT_FirstBus || '-',
+                Last: r.SAT_LastBus || '-',
+            },
+            'SUN / PH': {
+                First: r.SUN_FirstBus || '-',
+                Last: r.SUN_LastBus || '-',
+            },
+        });
+    }
+
+    for (const stopCode of Object.keys(firstLastTimingsOutput)) {
+        firstLastTimingsOutput[stopCode].sort(
+            (a, b) => sortServiceNumbers(a.serviceNo, b.serviceNo) || (a.direction - b.direction)
+        );
+    }
+
+    // ── 8. Write output ───────────────────────────────────────────────────────
 
     console.log('[Parser] Writing output files...');
     fs.writeFileSync(OUT.stops, JSON.stringify(stopsOutput), 'utf8');
     fs.writeFileSync(OUT.services, JSON.stringify(servicesOutput), 'utf8');
+    fs.writeFileSync(OUT.firstLastTimings, JSON.stringify(firstLastTimingsOutput), 'utf8');
 
-    console.log(`  ✓ Stops    → ${OUT.stops}`);
-    console.log(`  ✓ Services → ${OUT.services}`);
+    if (!fs.existsSync(OUT.firstLastTimingsDir)) {
+        fs.mkdirSync(OUT.firstLastTimingsDir, { recursive: true });
+    }
+
+    for (const [stopCode, timings] of Object.entries(firstLastTimingsOutput)) {
+        fs.writeFileSync(path.join(OUT.firstLastTimingsDir, `${stopCode}.json`), JSON.stringify(timings), 'utf8');
+    }
+
+    console.log(`  ✓ Stops              → ${OUT.stops}`);
+    console.log(`  ✓ Services           → ${OUT.services}`);
+    console.log(`  ✓ First/Last Timings → ${OUT.firstLastTimings}`);
+    console.log(`  ✓ Per-Stop Timings   → ${OUT.firstLastTimingsDir}`);
     console.log('\n✅ Done!');
-    console.log(`   ${stopsOutput.length} stops, ${Object.keys(servicesOutput).length} services`);
+    console.log(`   ${stopsOutput.length} stops, ${Object.keys(servicesOutput).length} services, ${Object.keys(firstLastTimingsOutput).length} stop timing entries`);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
