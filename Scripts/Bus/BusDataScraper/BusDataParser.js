@@ -324,8 +324,16 @@ async function parseBusData() {
 
     console.log('[Parser] Building first & last bus timings by stop...');
     const firstLastTimingsOutput = {};
-    const timingsByStopAndService = {};
+    // Build max sequence map per service + direction
+    const maxSeqMap = {};
+    for (const r of dmRoutesRaw) {
+        const key = `${r.ServiceNo}:${r.Direction}`;
+        if (!maxSeqMap[key] || r.StopSequence > maxSeqMap[key]) {
+            maxSeqMap[key] = r.StopSequence;
+        }
+    }
 
+    const timingsByStopAndService = {};
     for (const r of dmRoutesRaw) {
         const stopCode = r.BusStopCode;
         if (!stopCode) continue;
@@ -340,6 +348,8 @@ async function parseBusData() {
         timingsByStopAndService[stopCode][r.ServiceNo].push({
             rawDir: r.Direction,
             seq: r.StopSequence,
+            busStopCode: r.BusStopCode,
+            serviceNo: r.ServiceNo,
             WD: {
                 First: r.WD_FirstBus || '-',
                 Last: r.WD_LastBus || '-',
@@ -364,9 +374,11 @@ async function parseBusData() {
             items.sort((a, b) => (a.rawDir - b.rawDir) || (a.seq - b.seq));
 
             items.forEach((item, index) => {
+                const label = buildFirstLastLabel(item, items, dmServicesByNo, stopNameMap, maxSeqMap);
                 firstLastTimingsOutput[stopCode].push({
                     serviceNo: svcNo,
                     direction: index + 1,
+                    label,
                     WD: item.WD,
                     SAT: item.SAT,
                     'SUN / PH': item['SUN / PH'],
@@ -476,6 +488,74 @@ function sortServiceNumbers(a, b) {
     if (!isNaN(numA)) return -1;
     if (!isNaN(numB)) return 1;
     return a.localeCompare(b);
+}
+
+/**
+ * Build user-facing label for a first/last bus timing record.
+ * Handles Two-Direction services (Cases 1 & 2) and Loop services (Cases 3, 4 & 5).
+ */
+function buildFirstLastLabel(item, allVisits, dmServicesByNo, stopNameMap, maxSeqMap) {
+    const svcNo = item.serviceNo;
+    const dirs = dmServicesByNo[svcNo] || [];
+    const dir1 = dirs.find(d => d.Direction === 1);
+    const dir2 = dirs.find(d => d.Direction === 2);
+
+    const isTwoDirection = dir1 && dir2 && dir1.OriginCode !== dir1.DestinationCode;
+
+    if (isTwoDirection) {
+        // Case 1 & Case 2: Two direction services
+        const currentDirMeta = dirs.find(d => d.Direction === item.rawDir);
+        const destCode = currentDirMeta ? currentDirMeta.DestinationCode : '';
+        const destName = stopNameMap[destCode] || destCode;
+        const currentStopName = stopNameMap[item.busStopCode] || item.busStopCode;
+        const maxSeq = maxSeqMap[`${svcNo}:${item.rawDir}`];
+
+        if (item.seq === 1) {
+            // Case 1: Bus departing origin interchange
+            return `Departing for ${destName}`;
+        } else if (item.seq === maxSeq) {
+            // Case 1: Bus terminating / arriving back at destination interchange
+            return `Arriving at ${currentStopName}`;
+        } else {
+            // Case 2: Intermediate / Non-interchange stop
+            return `Towards ${destName}`;
+        }
+    } else {
+        // Case 3, Case 4, Case 5: Single direction loop services
+        const originCode = dir1 ? dir1.OriginCode : '';
+        const originName = stopNameMap[originCode] || originCode;
+        const loopDesc = dir1 ? dir1.LoopDesc : '';
+        const targetDesc = loopDesc || stopNameMap[dir1?.DestinationCode] || originName;
+
+        const sortedVisits = [...allVisits].sort((a, b) => a.rawDir - b.rawDir || a.seq - b.seq);
+        const visitIndex = sortedVisits.findIndex(v => v.rawDir === item.rawDir && v.seq === item.seq);
+
+        if (allVisits.length === 3) {
+            // Case 4: 3 visits at origin interchange
+            if (visitIndex === 0) return `Departing from ${originName}`;
+            if (visitIndex === 1) return `2nd visit`;
+            if (visitIndex === 2) return `Arriving at ${originName}`;
+        } else if (allVisits.length === 2) {
+            // Case 3: 2 visits
+            const maxSeq = maxSeqMap[`${svcNo}:${item.rawDir}`];
+            const isOriginStop = item.busStopCode === originCode || item.seq === 1 || item.seq === maxSeq;
+
+            if (isOriginStop) {
+                if (visitIndex === 0) return `Departing from ${originName}`;
+                if (visitIndex === 1) return `Arriving at ${originName}`;
+            } else {
+                if (visitIndex === 0) return `First visit`;
+                if (visitIndex === 1) return `Second visit`;
+            }
+        } else if (allVisits.length === 4) {
+            // 4 visits (e.g. Svc 382 at Punggol Int)
+            if (item.seq === 1) return `Departing from ${originName}`;
+            return `Arriving at ${originName}`;
+        }
+
+        // Single visit at mid-route loop stop
+        return `Towards ${targetDesc}`;
+    }
 }
 
 module.exports = { parseBusData, mapBusType };
