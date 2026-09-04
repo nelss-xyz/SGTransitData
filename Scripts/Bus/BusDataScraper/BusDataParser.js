@@ -41,6 +41,7 @@ const path = require('path');
 
 const { fetchDatamallBusData } = require('./fetchDatamallBusData');
 const { fetchLTABusData } = require('./fetchLTABusData');
+const { fetchBusRouteLines } = require('./fetchBusRouteLines');
 
 const TESTING_MODE = process.env.TESTING_MODE === 'true';
 
@@ -54,6 +55,7 @@ const RAW = {
     ltaStops: path.join(RAW_DIR, 'lta_stops.json'),
     ltaServices: path.join(RAW_DIR, 'lta_services.json'),
     ltaRoutes: path.join(RAW_DIR, 'lta_routes.json'),
+    routeLines: path.join(RAW_DIR, 'lta_route_lines.json'),
 };
 
 const OUT = {
@@ -61,6 +63,8 @@ const OUT = {
     services: path.join(OUTPUT_DIR, 'services.json'),
     firstLastTimings: path.join(OUTPUT_DIR, 'first_last_timings.json'),
     firstLastTimingsDir: path.join(OUTPUT_DIR, 'first-last-timings'),
+    routeLines: path.join(OUTPUT_DIR, 'route_lines.json'),
+    routeLinesDir: path.join(OUTPUT_DIR, 'route-lines'),
 };
 
 // ─── Entry Point ──────────────────────────────────────────────────────────────
@@ -78,6 +82,7 @@ const OUT = {
     if (!TESTING_MODE) {
         await fetchDatamallBusData();
         await fetchLTABusData();
+        await fetchBusRouteLines();
     }
 
     await parseBusData();
@@ -387,12 +392,53 @@ async function parseBusData() {
         }
     }
 
-    // ── 8. Write output ───────────────────────────────────────────────────────
+    // ── 8. Process route polylines ────────────────────────────────────────────
+    console.log('[Parser] Processing route polylines...');
+    let routeLinesRaw = {};
+    if (fs.existsSync(RAW.routeLines)) {
+        try {
+            routeLinesRaw = JSON.parse(fs.readFileSync(RAW.routeLines, 'utf8'));
+        } catch (e) {
+            console.warn(`[Parser] Warning: Failed to read ${RAW.routeLines}: ${e.message}`);
+        }
+    } else {
+        routeLinesRaw = await fetchBusRouteLines();
+    }
+
+    const routeLinesOutput = {};
+    const sortedServices = Object.keys(servicesOutput).sort(sortServiceNumbers);
+
+    for (const svcNo of sortedServices) {
+        const svcMeta = servicesOutput[svcNo];
+        const polys = routeLinesRaw[svcNo] || [];
+        if (polys.length === 0) continue;
+
+        const routesList = [];
+        for (let i = 0; i < polys.length; i++) {
+            const poly = polys[i];
+            if (!poly) continue;
+
+            const dirNum = i + 1;
+            const label = buildRouteDirectionLabel(svcNo, svcMeta, i, stopNameMap);
+            routesList.push({
+                direction: dirNum,
+                name: label,
+                polyline: poly,
+            });
+        }
+
+        if (routesList.length > 0) {
+            routeLinesOutput[svcNo] = routesList;
+        }
+    }
+
+    // ── 9. Write output ───────────────────────────────────────────────────────
 
     console.log('[Parser] Writing output files...');
     fs.writeFileSync(OUT.stops, JSON.stringify(stopsOutput), 'utf8');
     fs.writeFileSync(OUT.services, JSON.stringify(servicesOutput), 'utf8');
     fs.writeFileSync(OUT.firstLastTimings, JSON.stringify(firstLastTimingsOutput), 'utf8');
+    fs.writeFileSync(OUT.routeLines, JSON.stringify(routeLinesOutput), 'utf8');
 
     if (!fs.existsSync(OUT.firstLastTimingsDir)) {
         fs.mkdirSync(OUT.firstLastTimingsDir, { recursive: true });
@@ -402,15 +448,62 @@ async function parseBusData() {
         fs.writeFileSync(path.join(OUT.firstLastTimingsDir, `${stopCode}.json`), JSON.stringify(timings), 'utf8');
     }
 
+    if (!fs.existsSync(OUT.routeLinesDir)) {
+        fs.mkdirSync(OUT.routeLinesDir, { recursive: true });
+    }
+
+    for (const [svcNo, routeData] of Object.entries(routeLinesOutput)) {
+        fs.writeFileSync(path.join(OUT.routeLinesDir, `${svcNo}.json`), JSON.stringify(routeData), 'utf8');
+    }
+
     console.log(`  ✓ Stops              → ${OUT.stops}`);
     console.log(`  ✓ Services           → ${OUT.services}`);
     console.log(`  ✓ First/Last Timings → ${OUT.firstLastTimings}`);
     console.log(`  ✓ Per-Stop Timings   → ${OUT.firstLastTimingsDir}`);
+    console.log(`  ✓ Route Lines        → ${OUT.routeLines}`);
+    console.log(`  ✓ Per-Bus Route Lines→ ${OUT.routeLinesDir}`);
     console.log('\n✅ Done!');
-    console.log(`   ${stopsOutput.length} stops, ${Object.keys(servicesOutput).length} services, ${Object.keys(firstLastTimingsOutput).length} stop timing entries`);
+    console.log(`   ${stopsOutput.length} stops, ${Object.keys(servicesOutput).length} services, ${Object.keys(routeLinesOutput).length} route line entries`);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/**
+ * Build direction label for a route line (e.g. "Towards Kampong Bahru Ter").
+ */
+function buildRouteDirectionLabel(svcNo, svcMeta, dirIndex, stopNameMap) {
+    if (!svcMeta) return `Direction ${dirIndex + 1}`;
+
+    const routes = svcMeta.routes || [];
+    const routeSeq = routes[dirIndex];
+
+    if (routeSeq && routeSeq.length > 0) {
+        const lastCode = routeSeq[routeSeq.length - 1];
+        const lastStopName = stopNameMap[lastCode];
+
+        if (lastStopName) {
+            if (routes.length === 1 && svcMeta.name && svcMeta.name.includes('⟲')) {
+                const parts = svcMeta.name.split('⟲');
+                if (parts[1]) return `Towards ${parts[1].trim()}`;
+            }
+            return `Towards ${lastStopName}`;
+        }
+    }
+
+    if (svcMeta.name) {
+        if (svcMeta.name.includes('⇄')) {
+            const parts = svcMeta.name.split('⇄').map(s => s.trim());
+            if (dirIndex === 0 && parts[1]) return `Towards ${parts[1]}`;
+            if (dirIndex === 1 && parts[0]) return `Towards ${parts[0]}`;
+        } else if (svcMeta.name.includes('⟲')) {
+            const parts = svcMeta.name.split('⟲').map(s => s.trim());
+            if (parts[1]) return `Towards ${parts[1]}`;
+        }
+        return `Towards ${svcMeta.name}`;
+    }
+
+    return `Direction ${dirIndex + 1}`;
+}
 
 /**
  * Build service name from DataMall service metadata.
