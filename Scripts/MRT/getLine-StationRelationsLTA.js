@@ -75,7 +75,11 @@ async function formStationLineRelations() {
             // Split Interchange codes (e.g., "NS24-NE6-CC1" -> ["NS24", "NE6", "CC1"])
             const individualCodes = rawCode.split('-');
 
-            individualCodes.forEach(code => {
+            individualCodes.forEach(rawStnCode => {
+                let code = rawStnCode.trim();
+                if (code === 'CE1') code = 'CC34';
+                else if (code === 'CE2') code = 'CC33';
+
                 const parentLines = getParentLines(code);
 
                 // Push the station to all assigned parent lines

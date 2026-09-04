@@ -116,12 +116,31 @@ async function parseLTASpatialData() {
             };
         }
         
-        stationsByName[nameEn].codes.push(row.stn_code.trim());
-        stationsByName[nameEn].lines.push({
-            code: row.stn_code.trim(),
-            lineEn: row.mrt_line_english.trim(),
-            lineZh: row.mrt_line_chinese ? row.mrt_line_chinese.trim() : ''
-        });
+        let code = row.stn_code.trim();
+        let lineEn = row.mrt_line_english ? row.mrt_line_english.trim() : '';
+        let lineZh = row.mrt_line_chinese ? row.mrt_line_chinese.trim() : '';
+
+        // Normalize Circle Line Extension branch codes to Circle Line CC codes
+        if (code === 'CE1') {
+            code = 'CC34';
+            lineEn = 'Circle Line';
+            lineZh = '环线';
+        } else if (code === 'CE2') {
+            code = 'CC33';
+            lineEn = 'Circle Line';
+            lineZh = '环线';
+        }
+
+        if (!stationsByName[nameEn].codes.includes(code)) {
+            stationsByName[nameEn].codes.push(code);
+        }
+        if (!stationsByName[nameEn].lines.some(l => l.code === code)) {
+            stationsByName[nameEn].lines.push({
+                code: code,
+                lineEn: lineEn,
+                lineZh: lineZh
+            });
+        }
     }
 
     console.log('[LTA] Parsing Boundaries Shapefile...');

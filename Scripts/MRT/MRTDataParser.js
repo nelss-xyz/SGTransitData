@@ -53,6 +53,14 @@ const lineCodeToName = {
     'PTL': 'Punggol LRT',
 };
 
+function normalizeStationCode(code) {
+    if (!code) return code;
+    const trimmed = code.trim();
+    if (trimmed === 'CE1') return 'CC34';
+    if (trimmed === 'CE2') return 'CC33';
+    return trimmed;
+}
+
 function getLineCodeForStationCode(code) {
     const prefix = code.replace(/[0-9]/g, '');
     return prefixToLineCode[prefix] || null;
@@ -124,6 +132,9 @@ async function parseMRTData() {
     const outputStations = [];
 
     for (const ltaStation of ltaSpatialData.stations) {
+        // Normalize any legacy CE codes to CC codes
+        ltaStation.codes = [...new Set(ltaStation.codes.map(normalizeStationCode))].sort();
+
         // Find OSM node to patch Tamil name
         let nameTa = '';
         const osmMatch = osmStations.find(s => {
@@ -252,13 +263,14 @@ async function parseMRTData() {
     // First pass: merge new codes into existing stations that share the same name
     for (const line of outputLines) {
         for (const lineStn of line.stations) {
-            if (!existingCodes.has(lineStn.code)) {
+            const stnCode = normalizeStationCode(lineStn.code);
+            if (!existingCodes.has(stnCode)) {
                 const existingStation = outputStations.find(s => s.name.toLowerCase() === lineStn.name.toLowerCase());
                 if (existingStation) {
-                    existingStation.codes.push(lineStn.code);
-                    existingStation.codes.sort();
-                    existingCodes.add(lineStn.code);
-                    console.log(`[Parser] Merged new code ${lineStn.code} into existing station "${existingStation.name}"`);
+                    existingStation.codes.push(stnCode);
+                    existingStation.codes = [...new Set(existingStation.codes.map(normalizeStationCode))].filter(c => !c.startsWith('CE')).sort();
+                    existingCodes.add(stnCode);
+                    console.log(`[Parser] Merged new code ${stnCode} into existing station "${existingStation.name}"`);
                 }
             }
         }
@@ -268,7 +280,8 @@ async function parseMRTData() {
     const missingByName = {};
     for (const line of outputLines) {
         for (const lineStn of line.stations) {
-            if (!existingCodes.has(lineStn.code)) {
+            const stnCode = normalizeStationCode(lineStn.code);
+            if (!existingCodes.has(stnCode)) {
                 if (!missingByName[lineStn.name]) {
                     missingByName[lineStn.name] = {
                         name: lineStn.name,
@@ -277,8 +290,8 @@ async function parseMRTData() {
                         longitude: 0,
                     };
                 }
-                if (!missingByName[lineStn.name].codes.includes(lineStn.code)) {
-                    missingByName[lineStn.name].codes.push(lineStn.code);
+                if (!missingByName[lineStn.name].codes.includes(stnCode)) {
+                    missingByName[lineStn.name].codes.push(stnCode);
                 }
             }
         }
@@ -369,7 +382,16 @@ async function parseMRTData() {
         console.log(`[Parser] Station count after reconciliation: ${outputStations.length}`);
     }
 
-    // ── Step 8: Write output ────────────────────────────────────────────────
+    // ── Step 8: Final validation & Write output ────────────────────────────
+    for (const stn of outputStations) {
+        stn.codes = [...new Set(stn.codes.map(normalizeStationCode))].filter(c => !c.startsWith('CE')).sort();
+    }
+    for (const line of outputLines) {
+        for (const stn of line.stations) {
+            stn.code = normalizeStationCode(stn.code);
+        }
+    }
+
     const mrtData = {
         stations: outputStations,
         lines: outputLines,
@@ -475,7 +497,10 @@ function buildLines(osmRoutes, lineRelationsData) {
             lineColor: officialLineColors[lineCode] || '#888888',
             code: lineCode,
             type: isLrt ? 'lrt' : 'mrt',
-            stations: lineRelation.stations,
+            stations: lineRelation.stations.map(stn => ({
+                code: normalizeStationCode(stn.code),
+                name: stn.name,
+            })),
             polyline: linePolylines,
         });
     }
@@ -491,7 +516,7 @@ function buildLines(osmRoutes, lineRelationsData) {
  * Falls back to LTA data if not found.
  */
 function findOperatorData(ltaData, operatorData, stationCodes) {
-    const sortedCodes = [...stationCodes].sort();
+    const normalizedCodes = [...new Set(stationCodes.map(normalizeStationCode))].sort();
     const result = {
         trainFirstLastData: [],
         exits: [],
@@ -502,7 +527,8 @@ function findOperatorData(ltaData, operatorData, stationCodes) {
 
     // 1. Get Exits and Amenities from Operator Data
     for (const entry of operatorData) {
-        const hasCodeMatch = stationCodes.some(c => entry.codes.includes(c));
+        const entryCodes = (entry.codes || []).map(normalizeStationCode);
+        const hasCodeMatch = normalizedCodes.some(c => entryCodes.includes(c));
         if (hasCodeMatch) {
             if (entry.exits && entry.exits.length > 0) {
                 result.exits.push(...entry.exits);
@@ -560,8 +586,8 @@ function findOperatorData(ltaData, operatorData, stationCodes) {
 
     // 2. Get Train Timings from LTA Data (and fallback for exits)
     for (const entry of ltaData) {
-        const ltaCodes = entry.id.split('-').sort();
-        if (sortedCodes.join('-') === ltaCodes.join('-') || stationCodes.some(c => c === entry.id)) {
+        const ltaCodes = entry.id.split('-').map(normalizeStationCode).sort();
+        if (normalizedCodes.join('-') === ltaCodes.join('-') || normalizedCodes.some(c => c === entry.id || c === normalizeStationCode(entry.id))) {
             result.trainFirstLastData = entry.directions || [];
             if (!hasOperatorExits) result.exits = entry.exits || [];
             break;
